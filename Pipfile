@@ -1,0 +1,28 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pytest = "*"
+pytest-cov = "*"
+pytest-mock = "*"
+flake8 = "*"
+pytest-asyncio = "*"
+pytest-aiohttp = "*"
+
+[packages]
+spacy = "*"
+syllapy = "*"
+beautifulsoup4 = "*"
+python-dotenv = "*"
+asyncio = "*"
+aiohttp = "*"
+cchardet = "*"
+tortoise-orm = "*"
+aiosqlite = "*"
+python-dateutil = "*"
+aiodns = "*"
+
+[requires]
+python_version = "3.7"
