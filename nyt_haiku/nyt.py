@@ -1,4 +1,5 @@
 import re
+import sqlite3
 import tortoise
 import asyncio
 import aiohttp
@@ -68,28 +69,24 @@ async def section_callback(section_url: str, html: str):
 
     for url in article_urls:
         try:
-            article = await Article.filter(url=url).first()
-            if article is None:
-                print(f"  + {url}")
+            exists = await Article.exists(url=url)
+            if not exists:
                 await Article.create(url=url)
-        except tortoise.exceptions.IntegrityError:
+        except (tortoise.exceptions.IntegrityError, sqlite3.IntegrityError):
             pass
 
 async def check_sections():
     connector = aiohttp.TCPConnector(limit_per_host=15)
     async with aiohttp.ClientSession(connector=connector) as session:
-        await asyncio.gather(*[process_page(session, url, section_callback) for url in NYT_SECTION_URLS], return_exceptions=True)
-    return True
+        for url in NYT_SECTION_URLS:
+            async with session.get(url) as response:
+                html = await response.text()
+                await section_callback(url, html)
 
 # Borrowed from nyt-last-word
-async def article_callback(url: str, html: str):
-    print("ARTICLE", url)
+async def article_callback(article: Article, html: str):
+    print("ARTICLE", article.url)
     soup = BeautifulSoup(html, 'html.parser')
-
-    article = await Article.filter(url=url).first()
-
-    if article is None:
-        return
 
     for comment in soup.find_all(text=lambda text: isinstance(text, Comment)):
         comment.extract()
@@ -155,8 +152,8 @@ async def article_callback(url: str, html: str):
     haikus = find_haikus_in_article(body)
 
     for haiku in haikus:
-        existing_haiku = await Haiku.filter(hash=haiku["hash"]).first()
-        if not existing_haiku:
+        exists = await Haiku.exists(hash=haiku["hash"])
+        if not exists:
             print(f'{haiku["hash"]} {article.url}\n{haiku["lines"][0]}\n{haiku["lines"][1]}\n{haiku["lines"][2]}\n')
 
             try:
@@ -168,7 +165,7 @@ async def article_callback(url: str, html: str):
                     line2=haiku["lines"][2],
                     article_id=article.id
                 )
-            except tortoise.exceptions.IntegrityError:
+            except (tortoise.exceptions.IntegrityError, sqlite3.IntegrityError):
                 # print(f'HASH COLLISION FOR {haiku["hash"]}')
                 pass
 
@@ -176,14 +173,13 @@ async def article_callback(url: str, html: str):
     await article.save()
 
 
-
 async def fetch_articles():
-    unfetched_articles = await Article.filter(parsed=False)
-    urls = [article.url for article in unfetched_articles]
+    unfetched_articles = await Article.filter(parsed=False).all()
 
-    if urls:
+    if unfetched_articles:
         connector = aiohttp.TCPConnector(limit_per_host=15)
         async with aiohttp.ClientSession(connector=connector) as session:
-            await asyncio.gather(*[process_page(session, url, article_callback) for url in urls], return_exceptions=True)
-
-    return True
+            for article in unfetched_articles:
+                async with session.get(article.url) as response:
+                    html = await response.text()
+                    await article_callback(article, html)
