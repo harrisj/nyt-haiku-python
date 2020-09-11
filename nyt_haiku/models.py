@@ -36,9 +36,14 @@ async def init(path):
     # also specify the app name of "models"
     # which contain models from "app.models"
     await Tortoise.init(
-        db_url=f'sqlite://haiku.db',
+        db_url=f'sqlite://{path}',
         modules={'models': ['nyt_haiku.models']}
     )
 
-    # Generate the schema
+
+async def setup_db():
     await Tortoise.generate_schemas()
+
+
+async def close_db():
+    await Tortoise.close_connections()

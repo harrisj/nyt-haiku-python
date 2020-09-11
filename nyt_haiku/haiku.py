@@ -14,7 +14,7 @@ def sentences_from_article(text):
 
 def skip_sentence(sentence_text):
     # Skip month abbreviations
-    if re.search(r'(Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec|Mr|Mrs|Dr)\.', sentence_text):
+    if re.search(r'(Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec|Mr|Mrs|Dr|Ms|Mx|Flo)\.', sentence_text):
         return True
 
     if re.search(r'["“”0-9\n]', sentence_text):
@@ -23,7 +23,7 @@ def skip_sentence(sentence_text):
     if re.search(r'[A-Z]\.[A-Z].', sentence_text):
         return True
 
-    if re.match(r'^\(.+[^\)]$', sentence_text):
+    if re.match(r"^\(.+('s)|[^\);-]$", sentence_text):
         return True
 
     if re.search(r'(^By )|(photograph by)|(for the New York Times)|(illustration by)', sentence_text, flags=re.IGNORECASE):
@@ -32,7 +32,7 @@ def skip_sentence(sentence_text):
     return False
 
 def terms_from_sentence(text):
-    cleaned_text = text.strip(r'[ \n\t"“”]')
+    cleaned_text = text.strip(r'[ \n\t"“”\(\)]')
     return [(t, syllapy.count(t)) for t in cleaned_text.split(' ')]
 
 

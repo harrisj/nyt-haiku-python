@@ -49,17 +49,13 @@ NYT_SECTION_URLS = ['http://www.nytimes.com/',
                     ]
 
 
-async def process_page(session, url: str, callback):
-    async with session.get(url) as response:
-        html = await response.text()
-        await callback(url, html)
-        return True
-
-
-async def section_callback(section_url: str, html: str):
+async def section_callback(session, section_url: str):
     """Process a page and add links to the database"""
     print(f"SECTION {section_url}")
-    soup = BeautifulSoup(html, 'html.parser')
+    soup = None
+
+    async with session.get(section_url) as response:
+        soup = BeautifulSoup(await response.text(), 'html.parser')
     article_urls = [a.get('href') or '' for a in soup.find_all('a')]
 
     # if not http://, prepend domain name
@@ -75,18 +71,20 @@ async def section_callback(section_url: str, html: str):
         except (tortoise.exceptions.IntegrityError, sqlite3.IntegrityError):
             pass
 
+
 async def check_sections():
     connector = aiohttp.TCPConnector(limit_per_host=15)
     async with aiohttp.ClientSession(connector=connector) as session:
-        for url in NYT_SECTION_URLS:
-            async with session.get(url) as response:
-                html = await response.text()
-                await section_callback(url, html)
+        await asyncio.gather(*[asyncio.create_task(section_callback(session, url)) for url in NYT_SECTION_URLS])
+
 
 # Borrowed from nyt-last-word
-async def article_callback(article: Article, html: str):
+async def article_callback(session, article: Article):
     print("ARTICLE", article.url)
-    soup = BeautifulSoup(html, 'html.parser')
+    soup = None
+
+    async with session.get(article.url) as response:
+        soup = BeautifulSoup(await response.text(), 'html.parser')
 
     for comment in soup.find_all(text=lambda text: isinstance(text, Comment)):
         comment.extract()
@@ -174,12 +172,7 @@ async def article_callback(article: Article, html: str):
 
 
 async def fetch_articles():
-    unfetched_articles = await Article.filter(parsed=False).all()
-
-    if unfetched_articles:
-        connector = aiohttp.TCPConnector(limit_per_host=15)
-        async with aiohttp.ClientSession(connector=connector) as session:
-            for article in unfetched_articles:
-                async with session.get(article.url) as response:
-                    html = await response.text()
-                    await article_callback(article, html)
+    connector = aiohttp.TCPConnector(limit_per_host=15)
+    async with aiohttp.ClientSession(connector=connector) as session:
+        unfetched_articles = await Article.filter(parsed=False).all()
+        await asyncio.gather(*[asyncio.create_task(article_callback(session, article)) for article in unfetched_articles])
