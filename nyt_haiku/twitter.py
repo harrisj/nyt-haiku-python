@@ -24,7 +24,7 @@ async def tweet(session):
 
     # Need to do a manual connection to order by random
     conn = Tortoise.get_connection("default")
-    haiku_rows = await conn.execute_query_dict("select id from haiku order by RANDOM() limit 1")
+    haiku_rows = await conn.execute_query_dict("select id from haiku where tweet_id IS NULL order by RANDOM() limit 1")
 
     if len(haiku_rows) > 0:
         haiku = await models.Haiku.filter(id=haiku_rows[0]["id"]).first()
