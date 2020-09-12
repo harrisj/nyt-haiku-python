@@ -12,9 +12,8 @@ class Article(Model):
     description = fields.TextField(null=True)
     byline = fields.TextField(null=True)
     section = fields.CharField(max_length=32, null=True)
-    keyword = fields.TextField(null=True)
+    keywords = fields.TextField(null=True)
     sensitive = fields.BooleanField(null=False, default=False)
-    tiny_url = fields.TextField(null=True)
 
 
 class Haiku(Model):
