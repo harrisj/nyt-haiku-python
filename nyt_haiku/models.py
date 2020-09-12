@@ -26,9 +26,10 @@ class Haiku(Model):
     line1 = fields.TextField()
     line2 = fields.TextField()
     tweet = fields.TextField(null=True)
+    tweet_id = fields.TextField(null=True)
     tweeted_at = fields.DatetimeField(null=True)
-    retweet_count = fields.IntField(null=True)
-    favorite_count = fields.IntField(null=True)
+    retweet_count = fields.IntField(null=False, default=0)
+    favorite_count = fields.IntField(null=False, default=0)
 
 
 async def init(path):

@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "922fc5538577dd91722ebb8b9140839d70112a0beaaa80a02c862b30b474547e"
+            "sha256": "4a57f1203bb6e484d53c691692ecfa9e4fc65d533ec26b6199dc524b4bbd2a72"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -320,6 +320,14 @@
             ],
             "markers": "python_version >= '3.6'",
             "version": "==1.19.2"
+        },
+        "peony-twitter": {
+            "hashes": [
+                "sha256:29967dce306a0af8e75a755e56354c9340bd48e1e3b861d05cd14188d3cac45b",
+                "sha256:d89763289f10273ca788cf5aa33c0ccf2b1ec28dcfb9d3b424694b10f352ef67"
+            ],
+            "index": "pypi",
+            "version": "==1.1.7"
         },
         "plac": {
             "hashes": [

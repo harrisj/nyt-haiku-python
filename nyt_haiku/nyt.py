@@ -72,10 +72,8 @@ async def section_callback(session, section_url: str):
             pass
 
 
-async def check_sections():
-    connector = aiohttp.TCPConnector(limit_per_host=15)
-    async with aiohttp.ClientSession(connector=connector) as session:
-        await asyncio.gather(*[asyncio.create_task(section_callback(session, url)) for url in NYT_SECTION_URLS])
+async def check_sections(session):
+    await asyncio.gather(*[asyncio.create_task(section_callback(session, url)) for url in NYT_SECTION_URLS])
 
 
 # Borrowed from nyt-last-word
@@ -171,8 +169,6 @@ async def article_callback(session, article: Article):
     await article.save()
 
 
-async def fetch_articles():
-    connector = aiohttp.TCPConnector(limit_per_host=15)
-    async with aiohttp.ClientSession(connector=connector) as session:
-        unfetched_articles = await Article.filter(parsed=False).all()
-        await asyncio.gather(*[asyncio.create_task(article_callback(session, article)) for article in unfetched_articles])
+async def fetch_articles(session):
+    unfetched_articles = await Article.filter(parsed=False).all()
+    await asyncio.gather(*[asyncio.create_task(article_callback(session, article)) for article in unfetched_articles])
