@@ -8,8 +8,11 @@ from dateutil import parser
 import operator
 from functools import reduce
 
+from nyt_haiku.article_moderator import ArticleModerator
 from nyt_haiku.models import Article, Haiku
 from nyt_haiku.haiku import find_haikus_in_article
+
+ARTICLE_MODERATOR = ArticleModerator()
 
 NYT_SECTION_PATTERN = '^https?://www.nytimes.com/202'
 
@@ -51,7 +54,7 @@ NYT_SECTION_URLS = ['http://www.nytimes.com/',
 
 async def section_callback(session, section_url: str):
     """Process a page and add links to the database"""
-    print(f"SECTION {section_url}")
+    #print(f"SECTION {section_url}")
     soup = None
 
     async with session.get(section_url) as response:
@@ -73,13 +76,14 @@ async def section_callback(session, section_url: str):
 
 
 async def check_sections(session):
+    print("Checking sections")
     await asyncio.gather(*[asyncio.create_task(section_callback(session, url)) for url in NYT_SECTION_URLS])
 
 
 # Borrowed from nyt-last-word
 async def article_callback(session, article: Article):
-    print("ARTICLE", article.url)
     soup = None
+    article.sensitive = False
 
     async with session.get(article.url) as response:
         soup = BeautifulSoup(await response.text(), 'html.parser')
@@ -97,6 +101,27 @@ async def article_callback(session, article: Article):
         article.section = soup.find('meta', property='article:section').get("content", None)
     except AttributeError as e:
         print("META MISSING", url, e)
+        article.parsed = True
+        await article.save()
+        return
+
+    if ARTICLE_MODERATOR.contains_sensitive_term(article.title):
+        # print(f"SENSITIVE TITLE: {article.title} IN {article.url}")
+        article.sensitive = True
+
+    a_tags_meta = soup.find_all("meta", attrs={'property':'article:tag'})
+    a_tags = [a.get('content') for a in a_tags_meta]
+    article.tags = ';'.join(a_tags)
+
+    for tag in a_tags:
+        if ARTICLE_MODERATOR.is_sensitive_tag(tag):
+            # print(f"SENSITIVE TAG: {tag} IN {article.url}")
+            article.sensitive = True
+            break
+
+
+    if article.sensitive:
+        print(f"- {article.url} SENSITIVE")
         article.parsed = True
         await article.save()
         return
@@ -145,12 +170,16 @@ async def article_callback(session, article: Article):
 #                                   authorid,
                       bottom_correction,])
 
+
     haikus = find_haikus_in_article(body)
+    haiku_count = 0
 
     for haiku in haikus:
+        sensitive = ARTICLE_MODERATOR.contains_sensitive_term(haiku["sentence"])
         exists = await Haiku.exists(hash=haiku["hash"])
-        if not exists:
-            print(f'{haiku["hash"]} {article.url}\n{haiku["lines"][0]}\n{haiku["lines"][1]}\n{haiku["lines"][2]}\n')
+        if not exists and not sensitive:
+            haiku_count += 1
+            # print(f'\n{haiku["hash"]} {article.url}\n{haiku["lines"][0]}\n{haiku["lines"][1]}\n{haiku["lines"][2]}\n')
 
             try:
                 await Haiku.create(
@@ -166,6 +195,8 @@ async def article_callback(session, article: Article):
                 pass
 
     article.parsed = True
+
+    print(f"{haiku_count} {article.url}")
     await article.save()
 
 

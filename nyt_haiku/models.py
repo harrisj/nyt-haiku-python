@@ -13,6 +13,7 @@ class Article(Model):
     byline = fields.TextField(null=True)
     section = fields.CharField(max_length=32, null=True)
     keywords = fields.TextField(null=True)
+    tags = fields.TextField(null=True)
     sensitive = fields.BooleanField(null=False, default=False)
 
 
