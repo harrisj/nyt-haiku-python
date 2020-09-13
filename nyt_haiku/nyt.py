@@ -2,13 +2,13 @@ import re
 import sqlite3
 import tortoise
 import asyncio
-import aiohttp
+
 from bs4 import BeautifulSoup, NavigableString, Comment
 from dateutil import parser
 import operator
 from functools import reduce
 
-from nyt_haiku.article_moderator import ArticleModerator
+from nyt_haiku.moderator import ArticleModerator
 from nyt_haiku.models import Article, Haiku
 from nyt_haiku.haiku import find_haikus_in_article
 
@@ -175,11 +175,11 @@ async def article_callback(session, article: Article):
     haiku_count = 0
 
     for haiku in haikus:
-        sensitive = ARTICLE_MODERATOR.contains_sensitive_term(haiku["sentence"])
+        sensitive = ARTICLE_MODERATOR.contains_sensitive_term(haiku["sentence"]) or ARTICLE_MODERATOR.is_awkward(haiku["sentence"])
         exists = await Haiku.exists(hash=haiku["hash"])
         if not exists and not sensitive:
             haiku_count += 1
-            # print(f'\n{haiku["hash"]} {article.url}\n{haiku["lines"][0]}\n{haiku["lines"][1]}\n{haiku["lines"][2]}\n')
+            print(f'  {haiku["hash"]} {article.url}: {haiku["lines"][0]} / {haiku["lines"][1]} / {haiku["lines"][2]}')
 
             try:
                 await Haiku.create(

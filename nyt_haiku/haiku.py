@@ -12,25 +12,6 @@ def sentences_from_article(text):
     return [s.text.rstrip() for s in doc.sents]
 
 
-def skip_sentence(sentence_text):
-    # Skip month abbreviations
-    if re.search(r'(Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec|Mr|Mrs|Dr|Ms|Mx|Flo)\.', sentence_text):
-        return True
-
-    if re.search(r'["“”0-9\n]', sentence_text):
-        return True
-
-    if re.search(r'[A-Z]\.[A-Z].', sentence_text):
-        return True
-
-    if re.match(r"^\(.+('s)|[^\);-]$", sentence_text):
-        return True
-
-    if re.search(r'(^By )|(photograph by)|(for the New York Times)|(illustration by)', sentence_text, flags=re.IGNORECASE):
-        return True
-
-    return False
-
 def terms_from_sentence(text):
     cleaned_text = text.strip(r'[ \n\t"“”\(\)]')
     return [(t, syllapy.count(t)) for t in cleaned_text.split(' ')]
@@ -61,9 +42,6 @@ def seek_eol(terms):
 
 
 def find_haiku(sentence_text):
-    if skip_sentence(sentence_text):
-        return None
-
     terms = terms_from_sentence(sentence_text)
 
     lines = []

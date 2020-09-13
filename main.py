@@ -16,7 +16,9 @@ async def main():
     async with aiohttp.ClientSession(connector=connector) as session:
         await nyt.check_sections(session)
         await nyt.fetch_articles(session)
-        await twitter.tweet(session)
+        if os.getenv("DISABLE_TWITTER") != 'true':
+            await twitter.tweet(session)
+            
     await models.close_db()
 
 
