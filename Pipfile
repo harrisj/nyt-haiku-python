@@ -25,6 +25,7 @@ aiodns = "*"
 codetiming = "*"
 python-dotenv = "*"
 peony-twitter = "*"
+aiofiles = "*"
 
 [requires]
 python_version = "3.7"

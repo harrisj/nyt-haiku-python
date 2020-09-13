@@ -52,9 +52,9 @@ NYT_SECTION_URLS = ['http://www.nytimes.com/',
                     ]
 
 
-async def section_callback(session, section_url: str):
+async def section_callback(session, logger, section_url: str):
     """Process a page and add links to the database"""
-    #print(f"SECTION {section_url}")
+    logger.debug(f"START SECTION {section_url}")
     soup = None
 
     async with session.get(section_url) as response:
@@ -68,20 +68,20 @@ async def section_callback(session, section_url: str):
 
     for url in article_urls:
         try:
-            exists = await Article.exists(url=url)
+            exists = await Article.get_or_create(url=url)
             if not exists:
                 await Article.create(url=url)
         except (tortoise.exceptions.IntegrityError, sqlite3.IntegrityError):
             pass
 
 
-async def check_sections(session):
-    print("Checking sections")
-    await asyncio.gather(*[asyncio.create_task(section_callback(session, url)) for url in NYT_SECTION_URLS])
-
+async def check_sections(session, logger):
+    logger.info("SECTIONS start...")
+    await asyncio.gather(*[asyncio.create_task(section_callback(session, logger, url)) for url in NYT_SECTION_URLS])
+    logger.info("SECTIONS done")
 
 # Borrowed from nyt-last-word
-async def article_callback(session, article: Article):
+async def article_callback(session, logger, article: Article):
     soup = None
     article.sensitive = False
 
@@ -95,18 +95,18 @@ async def article_callback(session, article: Article):
         article.title = soup.find('meta', property='twitter:title', content=True).get("content", None)
         article.nyt_uri = soup.find('meta', attrs={'name':'nyt_uri'}).get("content", None)
         article.published_at = parser.parse(soup.find('meta', property='article:published').get("content", None))
-        article.byline = soup.find('meta', attrs={'name': 'byl'}).get("content", None)
+        article.byline = soup.find('meta', attrs={'name':'byl'}).get("content", None)
         article.description = soup.find('meta', attrs={'name':'description'}).get("content", None)
         article.keywords = soup.find('meta', attrs={'name':'news_keywords'}).get("content", None)
         article.section = soup.find('meta', property='article:section').get("content", None)
     except AttributeError as e:
-        print("META MISSING", url, e)
+        #print("META MISSING", url, e)
         article.parsed = True
         await article.save()
         return
 
     if ARTICLE_MODERATOR.contains_sensitive_term(article.title):
-        # print(f"SENSITIVE TITLE: {article.title} IN {article.url}")
+        logger.debug(f"SENSITIVE TITLE: {article.title} IN {article.url}")
         article.sensitive = True
 
     a_tags_meta = soup.find_all("meta", attrs={'property':'article:tag'})
@@ -115,13 +115,12 @@ async def article_callback(session, article: Article):
 
     for tag in a_tags:
         if ARTICLE_MODERATOR.is_sensitive_tag(tag):
-            # print(f"SENSITIVE TAG: {tag} IN {article.url}")
+            logger.debug(f"SENSITIVE TAG: {tag} IN {article.url}")
             article.sensitive = True
             break
 
-
     if article.sensitive:
-        print(f"- {article.url} SENSITIVE")
+        logger.info(f"SKIP    {article.url} SENSITIVE")
         article.parsed = True
         await article.save()
         return
@@ -129,7 +128,7 @@ async def article_callback(session, article: Article):
     try:
         p_tags = list(soup.find("article", {"id": "story"}).find_all('p'))
     except Error:
-        print(html)
+        # print(html)
         return
 
     div = soup.find('div', attrs={'class': 'story-addendum story-content theme-correction'})
@@ -179,7 +178,7 @@ async def article_callback(session, article: Article):
         exists = await Haiku.exists(hash=haiku["hash"])
         if not exists and not sensitive:
             haiku_count += 1
-            print(f'  {haiku["hash"]} {article.url}: {haiku["lines"][0]} / {haiku["lines"][1]} / {haiku["lines"][2]}')
+            logger.info(f'HAIKU {haiku["hash"]} {article.url}: {haiku["lines"][0]} / {haiku["lines"][1]} / {haiku["lines"][2]}')
 
             try:
                 await Haiku.create(
@@ -196,10 +195,12 @@ async def article_callback(session, article: Article):
 
     article.parsed = True
 
-    print(f"{haiku_count} {article.url}")
+    logger.info(f"FOUND {haiku_count} {article.url}")
     await article.save()
 
 
-async def fetch_articles(session):
+async def fetch_articles(session, logger):
+    logger.info("ARTICLES start...")
     unfetched_articles = await Article.filter(parsed=False).all()
-    await asyncio.gather(*[asyncio.create_task(article_callback(session, article)) for article in unfetched_articles])
+    await asyncio.gather(*[asyncio.create_task(article_callback(session, logger, article)) for article in unfetched_articles])
+    logger.info("ARTICLES done")
