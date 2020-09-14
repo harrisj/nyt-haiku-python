@@ -39,7 +39,7 @@ async def tweet(session, logger):
 
         await haiku.save()
 
-    response = await twitter_client.api.statuses.user_timeline.get(screen_name=os.getenv("TWITTER_USERNAME"), trim_user=True)
+    response = await twitter_client.api.statuses.user_timeline.get(count=200, screen_name=os.getenv("TWITTER_USERNAME"), trim_user=True)
     for t in response:
         haiku = await models.Haiku.filter(tweet_id=t['id_str']).first()
         if haiku:
