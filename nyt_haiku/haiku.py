@@ -1,4 +1,3 @@
-import re
 import spacy
 import syllapy
 import hashlib
@@ -8,12 +7,15 @@ from nyt_haiku.errors import LineMismatchError
 nlp = spacy.load("en_core_web_sm")
 
 def sentences_from_article(text):
+    if not text:
+        return []
+
     doc = nlp(text)
     return [s.text.rstrip() for s in doc.sents]
 
 
 def terms_from_sentence(text):
-    cleaned_text = text.strip(r'[ \n\t"“”\(\)]')
+    cleaned_text = text.strip("[ \r\n\t\"“”'’\\(\\)\\[\\];]")
     return [(t, syllapy.count(t)) for t in cleaned_text.split(' ')]
 
 
