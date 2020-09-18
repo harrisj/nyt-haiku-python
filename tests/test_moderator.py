@@ -36,6 +36,7 @@ def test_sensitive_terms(mod):
     "photograph by Jacob Harris",
     "illustration by Jacob Harris",
     "There are 23 lights",
+    "Cost was $83 total",
     "Stock of AT&T"])
 def test_is_awkward_text(mod, text):
     assert mod.is_awkward(text)

@@ -53,3 +53,13 @@ def test_terms_from_sentence_strip(ldelim, rdelim):
     assert len(terms) > 0
     assert terms[0] == ("Passersby", 3)
     assert terms[-1] == ("fudge", 1)
+
+
+@pytest.mark.parametrize("term,expected", [
+    ("apple", 2),
+    ("87", 4),
+    ("1,435", 11),
+    ("self-aware", 3),
+    ("-carry", 2)])
+def test_syallble_for_term(term, expected):
+    assert haiku.syllables_for_term(term) == expected

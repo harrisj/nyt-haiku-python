@@ -25,6 +25,7 @@ peony-twitter = "*"
 aiofiles = "*"
 aiosqlite = "*"
 tortoise-orm = "*"
+num2words = "*"
 
 [requires]
 python_version = "3.8"

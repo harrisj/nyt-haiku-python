@@ -5,3 +5,7 @@ class Error(Exception):
 
 class LineMismatchError(Error):
     pass
+
+
+class SyllableCountError(Error):
+    pass

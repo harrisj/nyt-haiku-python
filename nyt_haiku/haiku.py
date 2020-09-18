@@ -1,10 +1,13 @@
+import re
 import os
 import csv
 import spacy
 import syllapy
 import hashlib
+from num2words import num2words
+from string import punctuation
 
-from nyt_haiku.errors import LineMismatchError
+from nyt_haiku.errors import LineMismatchError, SyllableCountError
 
 nlp = spacy.load("en_core_web_sm")
 
@@ -27,9 +30,26 @@ def sentences_from_article(text):
     return [s.text.rstrip() for s in doc.sents]
 
 
+def syllables_for_term(term):
+    stripped_term = term.strip().lower().strip(punctuation)
+
+    try:
+        if re.match('[0-9,]+$', stripped_term):
+            return syllapy.count(num2words(int(stripped_term.replace(',', ''))))
+
+        r = re.match('([^-]+)-([^-]+)$', stripped_term)
+        if r:
+            return syllapy.count(r.group(1)) + syllapy.count(r.group(2))
+
+        return syllapy.count(term)
+
+    except Exception:
+        raise SyllableCountError("Unable to count syllables for term")
+
+
 def terms_from_sentence(text):
     cleaned_text = text.strip("[ \r\n\t\"“”'’\\(\\)\\[\\];]")
-    return [(t, syllapy.count(t)) for t in cleaned_text.split(' ')]
+    return [(t, syllables_for_term(t)) for t in cleaned_text.split(' ')]
 
 
 def seek_line(lines, max_syllables, terms):
@@ -42,6 +62,10 @@ def seek_line(lines, max_syllables, terms):
             raise LineMismatchError("Line is too short")
 
         term, syllables = terms.pop(0)
+
+        if syllables == 0:
+            raise LineMismatchError("Syllable count missing for term")
+        
         syllable_count += syllables
         line.append(term)
 
@@ -57,7 +81,10 @@ def seek_eol(terms):
 
 
 def find_haiku(sentence_text):
-    terms = terms_from_sentence(sentence_text)
+    try:
+        terms = terms_from_sentence(sentence_text)
+    except SyllableCountError:
+        return None
 
     lines = []
 

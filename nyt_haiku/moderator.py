@@ -56,7 +56,7 @@ class ArticleModerator:
             return True
 
         # Bad anywhere
-        if re.search(r'["“”&0-9\n\t]', text):
+        if re.search(r'["“”$@#&\n\t]', text):
             return True
 
         # NYT Credits
