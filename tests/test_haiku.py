@@ -29,6 +29,12 @@ def test_terms_from_sentence():
                      ("professor", 3), ("named", 1), ("Erno", 2), ("Rubik.", 2)]
 
 
+def test_load_syllables_override():
+    sentence = "an inspired foil"
+    terms = haiku.terms_from_sentence(sentence)
+    assert terms == [("an", 1), ("inspired", 3), ("foil", 2)]
+
+
 @pytest.mark.parametrize("ldelim, rdelim", [
     (" ", "\n"),
     ("\t", "\r\n"),

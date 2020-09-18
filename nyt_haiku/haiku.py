@@ -1,3 +1,5 @@
+import os
+import csv
 import spacy
 import syllapy
 import hashlib
@@ -5,6 +7,17 @@ import hashlib
 from nyt_haiku.errors import LineMismatchError
 
 nlp = spacy.load("en_core_web_sm")
+
+# Load additional syllable definitions beyond syllapy
+syllable_file_path = os.path.join(os.path.dirname(__file__), 'data', 'syllable_counts.csv')
+with open(syllable_file_path, newline='') as file:
+    reader = csv.reader(file)
+    for row in reader:
+        if len(row) == 2:
+            word = row[0].lower()
+            count = int(row[1])
+            syllapy.WORD_DICT[word] = count
+
 
 def sentences_from_article(text):
     if not text:
