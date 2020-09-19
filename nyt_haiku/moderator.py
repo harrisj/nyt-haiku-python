@@ -47,6 +47,14 @@ class ArticleModerator:
         if re.search(r'[A-Z][A-Z]+', text):
             return True
 
+        # Ordinals
+        if re.search(r'[0-9]+(nd|st|th)', text):
+            return True
+
+        # Websites
+        if re.search('([A-Za-z0-9]+)\.(com|org|net|ly|io)', text):
+            return True
+
         # Bad starters
         if re.fullmatch(r"^[—\-\('’].*", text):
             return True

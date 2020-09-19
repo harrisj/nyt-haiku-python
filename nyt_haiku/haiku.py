@@ -5,7 +5,11 @@ import spacy
 import syllapy
 import hashlib
 from num2words import num2words
+from unidecode import unidecode
 from string import punctuation
+
+from functools import reduce
+import operator
 
 from nyt_haiku.errors import LineMismatchError, SyllableCountError
 
@@ -30,20 +34,36 @@ def sentences_from_article(text):
     return [s.text.rstrip() for s in doc.sents]
 
 
+def clean_term(term):
+    return unidecode(term).strip().lower().strip(punctuation)
+
+
 def syllables_for_term(term):
-    stripped_term = term.strip().lower().strip(punctuation)
-
+    stripped_term = clean_term(term)
     try:
-        if re.match('[0-9,]+$', stripped_term):
-            return syllapy.count(num2words(int(stripped_term.replace(',', ''))))
+        if re.search("[  ]", stripped_term):
+            terms = stripped_term.split(' ')
+            return reduce(operator.add, [syllables_for_term(t) for t in terms])
 
+        r = re.match('([0-9]{4})s?$', stripped_term)
+        if r:
+            return syllables_for_term(num2words(int(r.group(1)), to='year'))
+
+        if re.match('[0-9,]+$', stripped_term):
+            return syllables_for_term(num2words(int(stripped_term.replace(',', ''))))
+
+        r = re.match('([^-]+)-([^-]+)-([^-]+)$', stripped_term)
+        if r:
+            return syllables_for_term(r.group(1)) + syllables_for_term(r.group(2)) + syllables_for_term(r.group(3))
+                    
         r = re.match('([^-]+)-([^-]+)$', stripped_term)
         if r:
-            return syllapy.count(r.group(1)) + syllapy.count(r.group(2))
+            return syllables_for_term(r.group(1)) + syllables_for_term(r.group(2))
 
-        return syllapy.count(term)
+        c = syllapy.count(term)
+        return c
 
-    except Exception:
+    except Exception as err:
         raise SyllableCountError("Unable to count syllables for term")
 
 
@@ -85,7 +105,7 @@ def find_haiku(sentence_text):
         terms = terms_from_sentence(sentence_text)
     except SyllableCountError:
         return None
-
+    
     lines = []
 
     try:

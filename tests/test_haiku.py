@@ -57,9 +57,11 @@ def test_terms_from_sentence_strip(ldelim, rdelim):
 
 @pytest.mark.parametrize("term,expected", [
     ("apple", 2),
-    ("87", 4),
-    ("1,435", 11),
+    ("57", 4),
+    ("1,435", 10),
+    ("1954", 5),
+    ("4-year-old", 3),
     ("self-aware", 3),
     ("-carry", 2)])
-def test_syallble_for_term(term, expected):
+def test_syllables_for_term(term, expected):
     assert haiku.syllables_for_term(term) == expected

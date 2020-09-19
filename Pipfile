@@ -26,6 +26,7 @@ aiofiles = "*"
 aiosqlite = "*"
 tortoise-orm = "*"
 num2words = "*"
+unidecode = "*"
 
 [requires]
 python_version = "3.8"
