@@ -40,7 +40,7 @@ class ArticleModerator:
             return True
 
         # Multi-character abbreviations
-        if re.search(r'[A-Z]\.[A-Z]\.', text):
+        if re.search('[A-Z]\\.[A-Z]\\.', text):
             return True
 
         # Multiple capitalized letters in a row (suggests a dateline)

@@ -20,7 +20,7 @@ def test_sensitive_terms(mod):
 
 @pytest.mark.parametrize('text', [
     "My friend Dr. Watson",
-    "She retired to Boca Raton, Fla.",
+    "She retired to Boca Raton, Fla. last year",
     "Another day at I.B.M. for us",
     "CAIRO - The sun",
     "the nameless narrator in Yishai Sarid’s",
@@ -44,6 +44,8 @@ def test_is_awkward_text(mod, text):
 
 @pytest.mark.parametrize('text', [
     "My friend Dr Watson",
+    "There are 43 lights",
+    "I won't do it",
     "self-aware this is the end",
     "This is by us",
     "How many hours of creative work do you think you do in a day?",

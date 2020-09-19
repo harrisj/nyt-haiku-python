@@ -52,11 +52,7 @@ def syllables_for_term(term):
         if re.match('[0-9,]+$', stripped_term):
             return syllables_for_term(num2words(int(stripped_term.replace(',', ''))))
 
-        r = re.match('([^-]+)-([^-]+)-([^-]+)$', stripped_term)
-        if r:
-            return syllables_for_term(r.group(1)) + syllables_for_term(r.group(2)) + syllables_for_term(r.group(3))
-                    
-        r = re.match('([^-]+)-([^-]+)$', stripped_term)
+        r = re.match('([^-]+)-(.+)$', stripped_term)
         if r:
             return syllables_for_term(r.group(1)) + syllables_for_term(r.group(2))
 

@@ -58,6 +58,7 @@ def test_terms_from_sentence_strip(ldelim, rdelim):
 @pytest.mark.parametrize("term,expected", [
     ("apple", 2),
     ("57", 4),
+    ("shouldn't", 2),
     ("1,435", 10),
     ("1954", 5),
     ("4-year-old", 3),
