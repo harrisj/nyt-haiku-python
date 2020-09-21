@@ -15,6 +15,7 @@ class Article(Model):
     keywords = fields.TextField(null=True)
     tags = fields.TextField(null=True)
     sensitive = fields.BooleanField(null=False, default=False)
+    created_at = fields.DatetimeField(null=True, auto_now_add=True)
 
 
 class Haiku(Model):
@@ -30,6 +31,7 @@ class Haiku(Model):
     tweeted_at = fields.DatetimeField(null=True)
     retweet_count = fields.IntField(null=False, default=0)
     favorite_count = fields.IntField(null=False, default=0)
+    created_at = fields.DatetimeField(null=True, auto_now_add=True)
 
 
 async def init(path):
