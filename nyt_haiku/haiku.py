@@ -41,7 +41,7 @@ def clean_term(term):
 def syllables_for_term(term):
     stripped_term = clean_term(term)
     try:
-        if re.search("[  ]", stripped_term):
+        if re.search("[ ]", stripped_term):
             terms = stripped_term.split(' ')
             return reduce(operator.add, [syllables_for_term(t) for t in terms])
 
@@ -54,7 +54,13 @@ def syllables_for_term(term):
 
         r = re.match('([^-]+)-(.+)$', stripped_term)
         if r:
-            return syllables_for_term(r.group(1)) + syllables_for_term(r.group(2))
+            s1 = syllables_for_term(r.group(1))
+            s2 = syllables_for_term(r.group(2))
+
+            if s1 == 0 or s2 == 0:
+                return 0
+            else:
+                return s1 + s2
 
         c = syllapy.count(term)
         return c
