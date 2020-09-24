@@ -43,6 +43,10 @@ class ArticleModerator:
         if re.search('[A-Z]\\.[A-Z]\\.', text):
             return True
 
+        # Single initials
+        if re.search(r'\b[A-Z]\. ', text):
+            return True
+
         # Multiple capitalized letters in a row (suggests a dateline)
         if re.search(r'[A-Z][A-Z]+', text):
             return True
@@ -68,7 +72,7 @@ class ArticleModerator:
             return True
 
         # NYT Credits
-        if re.search(r'(^By )|(photograph by)|(for the New York Times)|(illustration by)', text, flags=re.IGNORECASE):
+        if re.search(r'(^By )|(photograph by)|(the New York Times)|(The Times)|(illustration by)', text, flags=re.IGNORECASE):
             return True
 
         return False

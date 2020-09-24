@@ -21,6 +21,7 @@ def test_sensitive_terms(mod):
 @pytest.mark.parametrize('text', [
     "My friend Dr. Watson",
     "She retired to Boca Raton, Fla. last year",
+    "Arthur D. Lastname",
     "Another day at I.B.M. for us",
     "CAIRO - The sun",
     "the nameless narrator in Yishai Sarid’s",
@@ -34,6 +35,7 @@ def test_sensitive_terms(mod):
     "By Jacob Harris",
     "From match.com",
     "Jacob Harris for the New York Times",
+    "He contacted The Times for correction",
     "photograph by Jacob Harris",
     "illustration by Jacob Harris",
     "Cost was $83 total",
