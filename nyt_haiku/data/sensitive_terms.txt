@@ -2,7 +2,6 @@ FEMA
 abort
 abortion
 abuse
-airplane
 armed
 arms
 assault
@@ -20,21 +19,13 @@ blasts
 bomb
 bombing
 bombs
-charge
-charges
-conflict
-crash
 crime
 dead
-dead
 deadly
-death
 death penalty
 deaths
-dies
 drone
 dying
-earthquake
 emergency
 evacuate
 explode
@@ -49,11 +40,9 @@ hate crime
 hijack
 hostage
 hostages
-hostile
 hurricane
 insurgent
 israel
-jet
 jury
 kidnap
 kidnapped
@@ -63,8 +52,6 @@ kill
 killed
 killing
 kills
-landing
-lost
 massacre
 missile
 missing
@@ -76,13 +63,11 @@ murderer
 murdering
 murdering
 nuclear
-plane
 pro-choice
 pro-life
 prosecute
 raid
 riot
-sentence
 sentenced
 sentenced
 sexual
@@ -92,9 +77,6 @@ shooting
 shooting
 shoots
 shot
-shot
-siege
-spy
 suicide
 suicides
 suspect
@@ -105,7 +87,6 @@ trial
 tropical storm
 trump
 tsunami
-turmoil
 victim
 violence
 violent
