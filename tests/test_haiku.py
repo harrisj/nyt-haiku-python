@@ -61,6 +61,7 @@ def test_terms_from_sentence_strip(ldelim, rdelim):
     ("shouldn't", 2),
     ("1,435", 10),
     ("1954", 5),
+    ("1940s", 4),
     ("4-year-old", 3),
     ("self-aware", 3),
     ("-carry", 2)])

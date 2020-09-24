@@ -41,16 +41,14 @@ def clean_term(term):
 def syllables_for_term(term):
     stripped_term = clean_term(term)
     try:
-        if re.search("[ ]", stripped_term):
-            terms = stripped_term.split(' ')
-            return reduce(operator.add, [syllables_for_term(t) for t in terms])
-
         r = re.match('([0-9]{4})s?$', stripped_term)
         if r:
-            return syllables_for_term(num2words(int(r.group(1)), to='year'))
+            terms = num2words(r.group(1), to='year').split()
+            return reduce(operator.add, [syllables_for_term(term) for term in terms])
 
         if re.match('[0-9,]+$', stripped_term):
-            return syllables_for_term(num2words(int(stripped_term.replace(',', ''))))
+            terms = num2words(int(stripped_term.replace(',', ''))).split()
+            return reduce(operator.add, [syllables_for_term(term) for term in terms])
 
         r = re.match('([^-]+)-(.+)$', stripped_term)
         if r:
@@ -71,7 +69,7 @@ def syllables_for_term(term):
 
 def terms_from_sentence(text):
     cleaned_text = text.strip("[ \r\n\t\"“”'’\\(\\)\\[\\];]")
-    return [(t, syllables_for_term(t)) for t in cleaned_text.split(' ')]
+    return [(t, syllables_for_term(t)) for t in cleaned_text.split()]
 
 
 def seek_line(lines, max_syllables, terms):
