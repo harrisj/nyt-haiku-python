@@ -127,8 +127,10 @@ async def article_callback(session, logger, article: Article):
 
     try:
         p_tags = list(soup.find("article", {"id": "story"}).find_all('p'))
-    except Error:
-        # print(html)
+    except AttributeError:
+        logger.info(f"ERROR   {article.url} NO PARAS")
+        article.parsed = True
+        await article.save()
         return
 
     div = soup.find('div', attrs={'class': 'story-addendum story-content theme-correction'})
