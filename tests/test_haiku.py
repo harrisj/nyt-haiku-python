@@ -1,5 +1,5 @@
 import pytest
-import collections
+import collections.abc
 
 from nyt_haiku import haiku
 
@@ -8,15 +8,15 @@ def test_sentences_from_article():
     para = "It was the puzzle’s creator, an unassuming Hungarian architecture professor named Erno Rubik. When he invented the cube in 1974, he wasn’t sure it could ever be solved. Mathematicians later calculated that there are 43,252,003,274,489,856,000 ways to arrange the squares, but just one of those combinations is correct."
 
     sentences = haiku.sentences_from_article(para)
-    assert isinstance(sentences, collections.Sequence)
+    assert isinstance(sentences, collections.abc.Sequence)
     assert len(sentences) > 1
 
     sentences = haiku.sentences_from_article("")
-    assert isinstance(sentences, collections.Sequence)
+    assert isinstance(sentences, collections.abc.Sequence)
     assert len(sentences) == 0
 
     sentences = haiku.sentences_from_article(None)
-    assert isinstance(sentences, collections.Sequence)
+    assert isinstance(sentences, collections.abc.Sequence)
     assert len(sentences) == 0
 
 
