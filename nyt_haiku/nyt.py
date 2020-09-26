@@ -80,66 +80,63 @@ async def check_sections(session, logger):
     await asyncio.gather(*[asyncio.create_task(section_callback(session, logger, url)) for url in NYT_SECTION_URLS])
     logger.info("SECTIONS done")
 
-# Borrowed from nyt-last-word
-async def article_callback(session, logger, article: Article):
-    soup = None
-    article.sensitive = False
 
-    async with session.get(article.url) as response:
-        soup = BeautifulSoup(await response.text(), 'html.parser')
+def parse_article(logger, url: str, body_html:str):
+    '''Returns metadata plus body text'''
 
+    meta = {}
+    soup = BeautifulSoup(body_html, 'html.parser')
+
+    # Get rid of comments
     for comment in soup.find_all(text=lambda text: isinstance(text, Comment)):
         comment.extract()
 
-    try:
-        article.title = soup.find('meta', property='twitter:title', content=True).get("content", None)
-        article.nyt_uri = soup.find('meta', attrs={'name':'nyt_uri'}).get("content", None)
-        article.published_at = parser.parse(soup.find('meta', property='article:published').get("content", None))
-        article.byline = soup.find('meta', attrs={'name':'byl'}).get("content", None)
-        article.description = soup.find('meta', attrs={'name':'description'}).get("content", None)
-        article.keywords = soup.find('meta', attrs={'name':'news_keywords'}).get("content", None)
-        article.section = soup.find('meta', property='article:section').get("content", None)
-    except AttributeError as e:
-        #print("META MISSING", url, e)
-        article.parsed = True
-        await article.save()
-        return
+    meta['sensitive'] = False
+    meta['parsed'] = True
+    meta['title'] = soup.find('meta', property='twitter:title', content=True).get("content", None)
+    meta['nyt_uri'] = soup.find('meta', attrs={'name':'nyt_uri'}).get("content", None)
+    meta['published_at'] = parser.parse(soup.find('meta', property='article:published').get("content", None))
+    meta['byline'] = soup.find('meta', attrs={'name':'byl'}).get("content", None)
+    meta['description'] = soup.find('meta', attrs={'name':'description'}).get("content", None)
+    meta['keywords'] = soup.find('meta', attrs={'name':'news_keywords'}).get("content", None)
+    meta['section'] = soup.find('meta', property='article:section').get("content", None)
 
-    if ARTICLE_MODERATOR.contains_sensitive_term(article.title):
-        logger.debug(f"SENSITIVE TITLE: {article.title} IN {article.url}")
-        article.sensitive = True
+    if ARTICLE_MODERATOR.contains_sensitive_term(meta['title']):
+        logger.debug(f"SENSITIVE TITLE: {meta['title']} IN {url}")
+        meta['sensitive'] = True
 
     a_tags_meta = soup.find_all("meta", attrs={'property':'article:tag'})
     a_tags = [a.get('content') for a in a_tags_meta]
-    article.tags = ';'.join(a_tags)
+    meta['tags'] = ';'.join(a_tags)
 
     for tag in a_tags:
         if ARTICLE_MODERATOR.is_sensitive_tag(tag):
-            logger.debug(f"SENSITIVE TAG: {tag} IN {article.url}")
-            article.sensitive = True
+            logger.debug(f"SENSITIVE TAG: {tag} IN {url}")
+            meta['sensitive'] = True
             break
 
-    if article.sensitive:
-        logger.info(f"SKIP    {article.url} SENSITIVE")
-        article.parsed = True
-        await article.save()
-        return
+    if meta['sensitive']:
+        return meta, None
 
+    body_found = False
     try:
         p_tags = list(soup.find("article", {"id": "story"}).find_all('p'))
+        body_found = True
     except AttributeError:
-        logger.info(f"ERROR   {article.url} NO PARAS")
-        article.parsed = True
-        await article.save()
-        return
+        pass
 
-    div = soup.find('div', attrs={'class': 'story-addendum story-content theme-correction'})
-    if div:
-        p_tags += [div]
+    if not body_found:
+        try:
+            p_tags = []
+            for post in list(soup.find_all("div", {"class": "live-blog-post"})):
+                p_tags += post.find_all('p')
+            body_found = True
+        except AttributeError:
+            pass
 
-    footer = soup.find('footer', attrs={'class': 'story-footer story-content'})
-    if footer:
-        p_tags += list(footer.find_all(lambda x: x.get('class') != 'story-print-citation' and x.name == 'p'))
+    if not body_found:
+        logger.info(f"ERROR   {url} NO PARAGRAPHS")
+        return meta, None
 
     p_contents = reduce(operator.concat, [p.contents + [NavigableString('\n')] for p in p_tags], [])
 
@@ -156,22 +153,11 @@ async def article_callback(session, logger, article: Article):
                 except:
                     body_strings.append(node)
 
-    main_body = ''.join(body_strings)
-
-#        authorids = soup.find('div', attrs={'class':'authorIdentification'})
-#        authorid = authorids.getText() if authorids else ''
-
-    top_correction = ' '.join(x.getText() for x in
-                              soup.find_all('nyt_correction_top')) or ' '
-    bottom_correction = ' '.join(x.getText() for x in
-                                 soup.find_all('nyt_correction_bottom')) or ' '
-
-    body = '\n'.join([top_correction,
-                      main_body,
-#                                   authorid,
-                      bottom_correction,])
+    body = ''.join(body_strings)
+    return meta, body
 
 
+async def save_haikus(logger, article_id, url: str, body: str):
     haikus = find_haikus_in_article(body)
     haiku_count = 0
 
@@ -180,7 +166,7 @@ async def article_callback(session, logger, article: Article):
         exists = await Haiku.exists(hash=haiku["hash"])
         if not exists and not sensitive:
             haiku_count += 1
-            logger.info(f'HAIKU {haiku["hash"]} {article.url}: {haiku["lines"][0]} / {haiku["lines"][1]} / {haiku["lines"][2]}')
+            logger.info(f'HAIKU {haiku["hash"]} {url}: {haiku["lines"][0]} / {haiku["lines"][1]} / {haiku["lines"][2]}')
 
             try:
                 await Haiku.create(
@@ -189,15 +175,39 @@ async def article_callback(session, logger, article: Article):
                     line0=haiku["lines"][0],
                     line1=haiku["lines"][1],
                     line2=haiku["lines"][2],
-                    article_id=article.id
+                    article_id=article_id
                 )
             except (tortoise.exceptions.IntegrityError, sqlite3.IntegrityError):
                 # print(f'HASH COLLISION FOR {haiku["hash"]}')
                 pass
 
-    article.parsed = True
+    return haiku_count
 
-    logger.info(f"FOUND {haiku_count} {article.url}")
+
+async def article_callback(session, logger, article: Article):
+    article.sensitive = False
+    text = None
+    async with session.get(article.url) as response:
+        text = await response.text()
+
+    meta, body = parse_article(logger, article.url, text)
+
+    if meta['sensitive']:
+        logger.info(f"SKIP    {article.url} SENSITIVE")
+    else:
+        haiku_count = await save_haikus(logger, article.id, article.url, body)
+        logger.info(f"FOUND {haiku_count} {article.url}")
+
+    article.parsed = True
+    article.title = meta['title']
+    article.nyt_uri = meta['nyt_uri']
+    article.published_at = meta['published_at']
+    article.byline = meta['byline']
+    article.description = meta['description']
+    article.keywords = meta['keywords']
+    article.tags = meta['tags']
+    article.section = meta['section']
+
     await article.save()
 
 

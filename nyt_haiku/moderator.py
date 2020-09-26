@@ -56,7 +56,7 @@ class ArticleModerator:
             return True
 
         # Websites
-        if re.search('([A-Za-z0-9]+)\.(com|org|net|ly|io)', text):
+        if re.search(r'([A-Za-z0-9]+)\.(com|org|net|ly|io)', text):
             return True
 
         # Bad starters
@@ -72,7 +72,7 @@ class ArticleModerator:
             return True
 
         # NYT Credits
-        if re.search(r'(^By )|(photograph by)|(the New York Times)|(The Times)|(illustration by)', text, flags=re.IGNORECASE):
+        if re.search(r'(^By )|(photograph by)|(contributed reporting)|(the New York Times)|(The Times)|(illustration by)', text, flags=re.IGNORECASE):
             return True
 
         return False
