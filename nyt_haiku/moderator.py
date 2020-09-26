@@ -56,7 +56,7 @@ class ArticleModerator:
             return True
 
         # Websites
-        if re.search('([A-Za-z0-9]+)\.(com|org|net|ly|io)', text):
+        if re.search(r'([A-Za-z0-9]+)\.(com|org|net|ly|io)', text):
             return True
 
         # Bad starters
