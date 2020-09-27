@@ -81,7 +81,7 @@ async def check_sections(session, logger):
     logger.info("SECTIONS done")
 
 
-def parse_article(logger, url: str, body_html:str):
+def parse_article(logger, url: str, body_html:str, parse_sensitive:bool=False):
     '''Returns metadata plus body text'''
 
     meta = {}
@@ -115,7 +115,7 @@ def parse_article(logger, url: str, body_html:str):
             meta['sensitive'] = True
             break
 
-    if meta['sensitive']:
+    if meta['sensitive'] and not parse_sensitive:
         return meta, None
 
     body_found = False
