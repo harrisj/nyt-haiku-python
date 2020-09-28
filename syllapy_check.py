@@ -29,10 +29,10 @@ if __name__ == "__main__":
 
     haikus = haiku.find_haikus_in_article(body)
 
-    print("\n\nHAIKU")
-    for haiku in haikus:
-        print(f'{haiku["lines"][0]}\n{haiku["lines"][1]}\n{haiku["lines"][2]}\n')
-
     print("\n\nTERMS")
     for word in sorted(words.keys()):
         print(f"{word}: {words[word]}")
+
+    print("\n\nHAIKU")
+    for haiku in haikus:
+        print(f'{haiku["lines"][0]}\n{haiku["lines"][1]}\n{haiku["lines"][2]}\n')
