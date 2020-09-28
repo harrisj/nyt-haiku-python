@@ -64,6 +64,7 @@ def test_terms_from_sentence_strip(ldelim, rdelim):
     ("1940s", 4),
     ("4-year-old", 3),
     ("self-aware", 3),
+    ("16-10", 4),
     ("-carry", 2)])
 def test_syllables_for_term(term, expected):
     assert haiku.syllables_for_term(term) == expected

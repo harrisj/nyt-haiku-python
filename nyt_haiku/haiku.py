@@ -50,6 +50,12 @@ def syllables_for_term(term):
             terms = num2words(int(stripped_term.replace(',', ''))).split()
             return reduce(operator.add, [syllables_for_term(term) for term in terms])
 
+        r = re.match('([0-9]+)-([0-9]+)$', stripped_term)
+        if r:
+            s1 = syllables_for_term(r.group(1))
+            s2 = syllables_for_term(r.group(2))
+            return s1 + s2 + 1
+
         r = re.match('([^-]+)-(.+)$', stripped_term)
         if r:
             s1 = syllables_for_term(r.group(1))
