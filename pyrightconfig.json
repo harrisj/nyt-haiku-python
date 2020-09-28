@@ -1,0 +1,36 @@
+{
+  "include": [
+    "nyt_haiku"
+  ],
+  
+  "exclude": [
+    "**/node_modules",
+    "**/__pycache__"
+  ],
+
+  "ignore": [
+    "src/oldstuff"
+  ],
+
+  "stubPath": "nyt_haiku/stubs",
+  "venvPath": "/Users/harrisj/.local/share/virtualenvs",
+
+  "reportMissingImports": true,
+  "reportMissingTypeStubs": false,
+
+  "pythonVersion": "3.7",
+  "pythonPlatform": "Linux",
+
+  "executionEnvironments": [
+    {
+      "root": "nyt_haiku",
+      "pythonVersion": "3.7",
+      "venv": "nyt-haiku-python-YGCPWoh4"
+    },
+    {
+      "root": "tests",
+      "pythonVersion": "3.7",
+      "venv": "nyt-haiku-python-YGCPWoh4"
+    }
+  ]
+}
