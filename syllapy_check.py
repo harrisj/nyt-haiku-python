@@ -18,11 +18,14 @@ if __name__ == "__main__":
     url = sys.argv[1]
     body = fetch_article(url)
     sentences = haiku.sentences_from_article(body)
+
     for sent in sentences:
+        print(sent)
         terms = haiku.terms_from_sentence(sent)
         for (term, count) in terms:
             term = haiku.clean_term(term)
             words[term] = count
 
+    print("\n\nTERMS")
     for word in sorted(words.keys()):
         print(f"{word}: {words[word]}")

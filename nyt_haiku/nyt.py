@@ -14,7 +14,7 @@ from nyt_haiku.haiku import find_haikus_in_article
 
 ARTICLE_MODERATOR = ArticleModerator()
 
-NYT_SECTION_PATTERN = '^https?://www.nytimes.com/202'
+NYT_SECTION_PATTERN = '^https?://www.nytimes.com/(interactive/)?202'
 
 NYT_SECTION_URLS = ['http://www.nytimes.com/',
                     'http://www.nytimes.com/pages/world/',
@@ -93,13 +93,18 @@ def parse_article(logger, url: str, body_html:str, parse_sensitive:bool=False):
 
     meta['sensitive'] = False
     meta['parsed'] = True
-    meta['title'] = soup.find('meta', property='twitter:title', content=True).get("content", None)
     meta['nyt_uri'] = soup.find('meta', attrs={'name':'nyt_uri'}).get("content", None)
     meta['published_at'] = parser.parse(soup.find('meta', property='article:published').get("content", None))
     meta['byline'] = soup.find('meta', attrs={'name':'byl'}).get("content", None)
     meta['description'] = soup.find('meta', attrs={'name':'description'}).get("content", None)
     meta['keywords'] = soup.find('meta', attrs={'name':'news_keywords'}).get("content", None)
     meta['section'] = soup.find('meta', property='article:section').get("content", None)
+
+    title_tag = soup.find('meta', property='twitter:title')
+    if title_tag:
+        meta['title'] = title_tag.get('content', None)
+    else:
+        meta['title'] = soup.title
 
     if ARTICLE_MODERATOR.contains_sensitive_term(meta['title']):
         logger.debug(f"SENSITIVE TITLE: {meta['title']} IN {url}")
@@ -124,6 +129,13 @@ def parse_article(logger, url: str, body_html:str, parse_sensitive:bool=False):
         body_found = True
     except AttributeError:
         pass
+
+    if not body_found:
+        try:
+            p_tags = list(soup.find("article", {"id": "interactive"}).find_all('p'))
+            body_found = True
+        except AttributeError:
+            pass
 
     if not body_found:
         try:
