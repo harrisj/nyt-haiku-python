@@ -4,6 +4,7 @@ import tortoise
 import asyncio
 
 from bs4 import BeautifulSoup, NavigableString, Comment
+from datetime import datetime
 from dateutil import parser
 import operator
 from functools import reduce
@@ -94,7 +95,6 @@ def parse_article(logger, url: str, body_html:str, parse_sensitive:bool=False):
     meta['sensitive'] = False
     meta['parsed'] = True
     meta['nyt_uri'] = soup.find('meta', attrs={'name':'nyt_uri'}).get("content", None)
-    meta['published_at'] = parser.parse(soup.find('meta', property='article:published').get("content", None))
     meta['byline'] = soup.find('meta', attrs={'name':'byl'}).get("content", None)
     meta['description'] = soup.find('meta', attrs={'name':'description'}).get("content", None)
     meta['keywords'] = soup.find('meta', attrs={'name':'news_keywords'}).get("content", None)
@@ -109,6 +109,12 @@ def parse_article(logger, url: str, body_html:str, parse_sensitive:bool=False):
     if ARTICLE_MODERATOR.contains_sensitive_term(meta['title']):
         logger.debug(f"SENSITIVE TITLE: {meta['title']} IN {url}")
         meta['sensitive'] = True
+
+    published_tag = soup.find('mera', property='article:published')
+    if published_tag:
+        meta['published_at'] = parser.parse(published_tag.get("content", None))
+    else:
+        meta['published_at'] = datetime.now()
 
     a_tags_meta = soup.find_all("meta", attrs={'property':'article:tag'})
     a_tags = [a.get('content') for a in a_tags_meta]
