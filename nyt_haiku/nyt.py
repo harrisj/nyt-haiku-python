@@ -211,6 +211,7 @@ async def article_callback(session, logger, article: Article):
         logger.info(f"FOUND {haiku_count} {article.url}")
 
     article.parsed = True
+    article.sensitive = meta['sensitive']
     article.title = meta['title']
     article.nyt_uri = meta['nyt_uri']
     article.published_at = meta['published_at']
