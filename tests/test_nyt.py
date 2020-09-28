@@ -9,6 +9,12 @@ from nyt_haiku import nyt, haiku
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.NOTSET)
 
+
+def test_normalize_url():
+    assert nyt.normalize_url('http://www.foo.com/') == "http://www.foo.com/"
+    assert nyt.normalize_url('http://www.foo.com/bar?baz=quux') == "http://www.foo.com/bar"
+
+
 def test_parse_article():
     path = os.path.join(os.path.dirname(__file__), 'samples', 'article.html')
     html = ''

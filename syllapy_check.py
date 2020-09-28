@@ -21,10 +21,17 @@ if __name__ == "__main__":
 
     for sent in sentences:
         print(sent)
+
         terms = haiku.terms_from_sentence(sent)
         for (term, count) in terms:
             term = haiku.clean_term(term)
             words[term] = count
+
+    haikus = haiku.find_haikus_in_article(body)
+
+    print("\n\nHAIKU")
+    for haiku in haikus:
+        print(f'{haiku["lines"][0]}\n{haiku["lines"][1]}\n{haiku["lines"][2]}\n')
 
     print("\n\nTERMS")
     for word in sorted(words.keys()):

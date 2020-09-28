@@ -2,6 +2,7 @@ import re
 import sqlite3
 import tortoise
 import asyncio
+from urllib.parse import urljoin, urlparse
 
 from bs4 import BeautifulSoup, NavigableString, Comment
 from datetime import datetime
@@ -53,6 +54,10 @@ NYT_SECTION_URLS = ['http://www.nytimes.com/',
                     ]
 
 
+def normalize_url(url:str) -> str:
+    return urljoin(url, urlparse(url).path)
+
+
 async def section_callback(session, logger, section_url: str):
     """Process a page and add links to the database"""
     logger.debug(f"START SECTION {section_url}")
@@ -65,7 +70,7 @@ async def section_callback(session, logger, section_url: str):
     # if not http://, prepend domain name
     domain = '/'.join(section_url.split('/')[:3])
     article_urls = [url if '://' in url else operator.concat(domain, url) for url in article_urls]
-    article_urls = set([url for url in article_urls if re.search(NYT_SECTION_PATTERN, url)])
+    article_urls = set([normalize_url(url) for url in article_urls if re.search(NYT_SECTION_PATTERN, url)])
 
     for url in article_urls:
         try:
@@ -110,7 +115,7 @@ def parse_article(logger, url: str, body_html:str, parse_sensitive:bool=False):
         logger.debug(f"SENSITIVE TITLE: {meta['title']} IN {url}")
         meta['sensitive'] = True
 
-    published_tag = soup.find('mera', property='article:published')
+    published_tag = soup.find('meta', property='article:published')
     if published_tag:
         meta['published_at'] = parser.parse(published_tag.get("content", None))
     else:
