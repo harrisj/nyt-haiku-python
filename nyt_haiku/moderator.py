@@ -63,12 +63,16 @@ class ArticleModerator:
         if re.fullmatch(r"^[—\-\('’,;a-z].*", text):
             return True
 
+        # No internal quotes
+        if re.search(r' [‘“"][A-Z]', text) or re.search(r'[”"’] ', text):
+            return True
+
         # Bad ends
-        if re.fullmatch(r".+(([\-\);—])|(['’]s)|(he said)|(she said))$", text):
+        if re.fullmatch(r".+(([\-\);—])|(['’]s)|(he said.?)|(she said.?))$", text):
             return True
 
         # Bad anywhere
-        if re.search(r'["“”‘$@#&\n\t]', text):
+        if re.search(r'[$@#&\n\t]', text):
             return True
 
         # NYT Credits
