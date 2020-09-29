@@ -39,6 +39,10 @@ def test_sensitive_terms(mod):
     "The end)",
     "By Jacob Harris",
     "From match.com",
+    "Michaela Coel] is such a good writer",
+    "Michaela Coel) is such a good writer",
+    "But (Michaela Coel is such a good writer",
+    "But [Michaela Coel is such a good writer",
     "Jacob Harris for the New York Times",
     "He contacted The Times for correction",
     "Photograph by Jacob Harris",
@@ -54,6 +58,7 @@ def test_is_awkward_text(mod, text):
     "There are 43 lights",
     "I won't do it",
     "Self-aware this is the end",
+    "Michaela Coel is such an [expletive] good writer",
     "This is by us",
     "How many hours of creative work do you think you do in a day?",
     "It didn’t matter how big the pool was, if there was a pool I’d jump in."])

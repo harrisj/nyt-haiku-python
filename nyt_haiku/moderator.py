@@ -67,6 +67,13 @@ class ArticleModerator:
         if re.search(r' [‘“"][A-Z]', text) or re.search(r'[”"’] ', text):
             return True
 
+        # Mismatched parens
+        if re.search(r'\([^\)]+$', text) or re.search(r'\[[^\]]+$', text):
+            return True
+
+        if re.match(r'[^\(]+\)', text) or re.match(r'[^\[]+\]', text):
+            return True
+
         # Bad ends
         if re.fullmatch(r".+(([\-\);—])|(['’]s)|(he said.?)|(she said.?))$", text):
             return True
