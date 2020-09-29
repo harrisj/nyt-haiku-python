@@ -18,6 +18,8 @@ blasts
 bomb
 bombing
 bombs
+coronavirus
+covid-19
 crime
 dead
 deadly
