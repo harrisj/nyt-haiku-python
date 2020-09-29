@@ -60,15 +60,15 @@ class ArticleModerator:
             return True
 
         # Bad starters
-        if re.fullmatch(r"^[—\-\('’].*", text):
+        if re.fullmatch(r"^[—\-\('’,;a-z].*", text):
             return True
 
         # Bad ends
-        if re.fullmatch(r".+(([\-\);])|(['’]s))$", text):
+        if re.fullmatch(r".+(([\-\);—])|(['’]s)|(he said)|(she said))$", text):
             return True
 
         # Bad anywhere
-        if re.search(r'["“”$@#&\n\t]', text):
+        if re.search(r'["“”‘$@#&\n\t]', text):
             return True
 
         # NYT Credits
