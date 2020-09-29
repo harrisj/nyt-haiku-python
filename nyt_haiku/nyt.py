@@ -18,39 +18,39 @@ ARTICLE_MODERATOR = ArticleModerator()
 
 NYT_SECTION_PATTERN = '^https?://www.nytimes.com/(interactive/)?202'
 
-NYT_SECTION_URLS = ['http://www.nytimes.com/',
-                    'http://www.nytimes.com/pages/world/',
-                    'http://www.nytimes.com/pages/national/',
-                    'http://www.nytimes.com/pages/todayspaper/',
-                    'http://www.nytimes.com/pages/politics/',
-                    'http://www.nytimes.com/pages/nyregion/',
-                    'http://www.nytimes.com/pages/business/',
-                    'http://www.nytimes.com/pages/technology/',
-                    'http://www.nytimes.com/pages/sports/',
-                    'http://dealbook.nytimes.com/',
-                    'http://www.nytimes.com/pages/science/',
-                    'http://www.nytimes.com/pages/health/',
-                    'http://www.nytimes.com/pages/arts/',
-                    'http://www.nytimes.com/pages/style/',
-                    'http://www.nytimes.com/pages/opinion/',
-                    'http://www.nytimes.com/pages/automobiles/',
-                    'http://www.nytimes.com/pages/books/',
-                    'http://www.nytimes.com/crosswords/',
-                    'http://www.nytimes.com/pages/dining/',
-                    'http://www.nytimes.com/pages/education/',
-                    'http://www.nytimes.com/pages/fashion/',
-                    'http://www.nytimes.com/pages/garden/',
-                    'http://www.nytimes.com/pages/magazine/',
-                    'http://www.nytimes.com/pages/business/media/',
-                    'http://www.nytimes.com/pages/movies/',
-                    'http://www.nytimes.com/pages/arts/music/',
-                    'http://www.nytimes.com/pages/obituaries/',
+NYT_SECTION_URLS = ['https://www.nytimes.com/',
+                    'https://www.nytimes.com/pages/world/',
+                    'https://www.nytimes.com/pages/national/',
+                    'https://www.nytimes.com/pages/todayspaper/',
+                    'https://www.nytimes.com/pages/politics/',
+                    'https://www.nytimes.com/pages/nyregion/',
+                    'https://www.nytimes.com/pages/business/',
+                    'https://www.nytimes.com/pages/technology/',
+                    'https://www.nytimes.com/pages/sports/',
+                    'https://dealbook.nytimes.com/',
+                    'https://www.nytimes.com/pages/science/',
+                    'https://www.nytimes.com/pages/health/',
+                    'https://www.nytimes.com/pages/arts/',
+                    'https://www.nytimes.com/pages/style/',
+                    'https://www.nytimes.com/pages/opinion/',
+                    'https://www.nytimes.com/pages/automobiles/',
+                    'https://www.nytimes.com/pages/books/',
+                    'https://www.nytimes.com/crosswords/',
+                    'https://www.nytimes.com/pages/dining/',
+                    'https://www.nytimes.com/pages/education/',
+                    'https://www.nytimes.com/pages/fashion/',
+                    'https://www.nytimes.com/pages/garden/',
+                    'https://www.nytimes.com/pages/magazine/',
+                    'https://www.nytimes.com/pages/business/media/',
+                    'https://www.nytimes.com/pages/movies/',
+                    'https://www.nytimes.com/pages/arts/music/',
+                    'https://www.nytimes.com/pages/obituaries/',
 # #                           'http://www.nytimes.com/pages/realestate/',
-                    'http://www.nytimes.com/pages/t-magazine/',
-                    'http://www.nytimes.com/pages/arts/television/',
-                    'http://www.nytimes.com/pages/theater/',
-                    'http://www.nytimes.com/pages/travel/',
-                    'http://www.nytimes.com/pages/fashion/weddings/',
+                    'https://www.nytimes.com/pages/t-magazine/',
+                    'https://www.nytimes.com/pages/arts/television/',
+                    'https://www.nytimes.com/pages/theater/',
+                    'https://www.nytimes.com/pages/travel/',
+                    'https://www.nytimes.com/pages/fashion/weddings/',
                     ]
 
 
@@ -83,7 +83,7 @@ async def section_callback(session, logger, section_url: str):
 
 async def check_sections(session, logger):
     logger.info("SECTIONS start...")
-    await asyncio.gather(*[asyncio.create_task(section_callback(session, logger, url)) for url in NYT_SECTION_URLS])
+    await asyncio.gather(*[asyncio.create_task(section_callback(session, logger, url)) for url in NYT_SECTION_URLS], return_exceptions=True)
     logger.info("SECTIONS done")
 
 
@@ -238,5 +238,5 @@ async def article_callback(session, logger, article: Article):
 async def fetch_articles(session, logger):
     logger.info("ARTICLES start...")
     unfetched_articles = await Article.filter(parsed=False).all()
-    await asyncio.gather(*[asyncio.create_task(article_callback(session, logger, article)) for article in unfetched_articles])
+    await asyncio.gather(*[asyncio.create_task(article_callback(session, logger, article)) for article in unfetched_articles], return_exceptions=True)
     logger.info("ARTICLES done")
