@@ -1,6 +1,7 @@
 import sys
 import requests
 from nyt_haiku import nyt, haiku
+from nyt_haiku.moderator import ArticleModerator
 from string import punctuation
 import logging
 words = {}
@@ -18,6 +19,7 @@ if __name__ == "__main__":
     url = sys.argv[1]
     body = fetch_article(url)
     sentences = haiku.sentences_from_article(body)
+    moderator = ArticleModerator()
 
     for sent in sentences:
         print(sent)
@@ -35,4 +37,5 @@ if __name__ == "__main__":
 
     print("\n\nHAIKU")
     for haiku in haikus:
-        print(f'{haiku["lines"][0]}\n{haiku["lines"][1]}\n{haiku["lines"][2]}\n')
+        if not moderator.is_awkward(haiku["sentence"]):
+            print(f'{haiku["lines"][0]}\n{haiku["lines"][1]}\n{haiku["lines"][2]}\n')

@@ -32,6 +32,7 @@ def test_sensitive_terms(mod):
     'It is not over," she said.',
     "After four years, she said to me, ‘Calvin, ",
     "Are these qualities carried in our genes, or does the life we live —",
+    "He already had a pair of Crocs, he said, “but these were Bad Bunny",
     "probably revenge for a joke Michael",
     "At his expense, he said",
     "The end;",

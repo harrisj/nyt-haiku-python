@@ -64,7 +64,7 @@ class ArticleModerator:
             return True
 
         # No internal quotes
-        if re.search(r' [‘“"][A-Z]', text) or re.search(r'[”"’] ', text):
+        if re.search(r' [‘“"][A-Za-z]', text) or re.search(r'[”"’] ', text):
             return True
 
         # Mismatched parens
