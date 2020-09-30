@@ -75,7 +75,7 @@ def syllables_for_term(term):
             else:
                 return s1 + s2
 
-        c = syllapy.count(term)
+        c = syllapy.count(stripped_term)
         return c
 
     except Exception as err:

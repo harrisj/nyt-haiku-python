@@ -1,5 +1,6 @@
 import pytest
 import collections.abc
+import syllapy
 
 from nyt_haiku import haiku
 
@@ -58,7 +59,6 @@ def test_terms_from_sentence_strip(ldelim, rdelim):
 @pytest.mark.parametrize("term,expected", [
     ("apple", 2),
     ("57", 4),
-    ("shouldn't", 2),
     ("1,235", 10),
     ("1952", 5),
     ("1920s", 4),
@@ -68,4 +68,12 @@ def test_terms_from_sentence_strip(ldelim, rdelim):
     ("16-10", 4),
     ("-carry", 2)])
 def test_syllables_for_term(term, expected):
+    assert haiku.syllables_for_term(term) == expected
+
+
+@pytest.mark.parametrize("term,expected", [
+    ("weren’t", 1)])
+def test_overrides_for_term(term, expected):
+    stripped_term = haiku.clean_term(term)
+    assert stripped_term in syllapy.WORD_DICT
     assert haiku.syllables_for_term(term) == expected
