@@ -5,6 +5,7 @@ class ArticleModerator:
     def __init__(self):
         self.init_sensitive_tags()
         self.init_sensitive_terms()
+        self.init_sensitive_sections()
         self.init_awkward_abbreviations()
 
     def init_sensitive_tags(self):
@@ -29,8 +30,15 @@ class ArticleModerator:
         awkward_regex_string = '|'.join([f"({t})" for t in self.awkward_abbreviations]).replace(".", "\\.")
         self.awkward_abbreviation_regex = re.compile(f"\b{awkward_regex_string}")
 
+    def init_sensitive_sections(self):
+        with open(os.path.join(os.path.dirname(__file__), 'data', 'sensitive_sections.txt')) as fp:
+            self.sensitive_sections = set(line for line in (l.strip() for l in fp) if line)
+
     def is_sensitive_tag(self, tag):
         return tag in self.sensitive_tags
+
+    def is_sensitive_section(self, tag):
+        return tag in self.sensitive_sections
 
     def contains_sensitive_term(self, text):
         return self.sensitive_term_regex.search(text)

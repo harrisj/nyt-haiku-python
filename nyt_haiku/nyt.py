@@ -105,6 +105,10 @@ def parse_article(logger, url: str, body_html:str, parse_sensitive:bool=False):
     meta['keywords'] = soup.find('meta', attrs={'name':'news_keywords'}).get("content", None)
     meta['section'] = soup.find('meta', property='article:section').get("content", None)
 
+    if ARTICLE_MODERATOR.is_sensitive_section(meta['section']):
+        logger.debug(f"SENSITIVE SECTION: {meta['section']} in {url}")
+        meta['sensitive'] = True
+
     title_tag = soup.find('meta', property='twitter:title')
     if title_tag:
         meta['title'] = title_tag.get('content', None)
