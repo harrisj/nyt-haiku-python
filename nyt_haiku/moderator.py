@@ -75,7 +75,7 @@ class ArticleModerator:
             return True
 
         # Bad ends
-        if re.fullmatch(r".+(([\-\);—])|(['’]s)|(he said.?)|(she said.?))$", text):
+        if re.fullmatch(r".+(([\-\);—:,])|(['’]s)|(he said.?)|(she said.?))$", text):
             return True
 
         # Bad anywhere

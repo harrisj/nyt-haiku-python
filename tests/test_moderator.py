@@ -39,6 +39,7 @@ def test_sensitive_terms(mod):
     "The end)",
     "By Jacob Harris",
     "From match.com",
+    "And that is why I have only one answer to every question now:",
     "Michaela Coel] is such a good writer",
     "Michaela Coel) is such a good writer",
     "But (Michaela Coel is such a good writer",
