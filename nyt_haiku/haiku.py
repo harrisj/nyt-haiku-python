@@ -15,6 +15,8 @@ from nyt_haiku.errors import LineMismatchError, SyllableCountError
 
 nlp = spacy.load("en_core_web_sm")
 
+SPECIAL_PUNCTUATION_BREAKS = ['-', '—']
+
 # Load additional syllable definitions beyond syllapy
 syllable_file_path = os.path.join(os.path.dirname(__file__), 'data', 'syllable_counts.csv')
 with open(syllable_file_path, newline='') as file:
@@ -38,7 +40,14 @@ def clean_term(term):
     return unidecode(term).strip().lower().strip(punctuation)
 
 
+def is_special_punctuation(term):
+    return term in SPECIAL_PUNCTUATION_BREAKS;
+
+
 def syllables_for_term(term):
+    if is_special_punctuation(term):
+        return 0
+
     stripped_term = clean_term(term)
     try:
         r = re.match('([0-9]{4})s?$', stripped_term)
@@ -89,7 +98,7 @@ def seek_line(lines, max_syllables, terms):
 
         term, syllables = terms.pop(0)
 
-        if syllables == 0:
+        if syllables == 0 and not is_special_punctuation(term):
             raise LineMismatchError("Syllable count missing for term")
         
         syllable_count += syllables

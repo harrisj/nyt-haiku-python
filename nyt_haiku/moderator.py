@@ -67,6 +67,13 @@ class ArticleModerator:
         if re.search(r' [‘“"][A-Za-z]', text) or re.search(r'[”"’] ', text):
             return True
 
+        # Mismatched quotes
+        if re.match(r'[‘“"\']', text) and re.search(r'[^‘“"\']$', text):
+            return True
+
+        if re.match(r'[^‘“"\']', text) and re.search(r'[‘“"\']$', text):
+            return True
+
         # Mismatched parens
         if re.search(r'\([^\)]+$', text) or re.search(r'\[[^\]]+$', text):
             return True

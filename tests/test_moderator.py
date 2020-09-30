@@ -35,6 +35,8 @@ def test_sensitive_terms(mod):
     "He already had a pair of Crocs, he said, “but these were Bad Bunny",
     "probably revenge for a joke Michael",
     "At his expense, he said",
+    "“— and make sure that we invest in the people who in fact need the help.",
+    "invest in the people who in fact need the help.“",
     "The end;",
     "The end-",
     "The end)",

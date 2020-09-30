@@ -21,10 +21,10 @@ def test_sentences_from_article():
 
 
 def test_terms_from_sentence():
-    sentence = "It was the puzzle’s creator, an unassuming architecture professor named Erno Rubik."
+    sentence = "It was the puzzle’s creator — an unassuming architecture professor named Erno Rubik."
     terms = haiku.terms_from_sentence(sentence)
 
-    assert terms == [("It", 1), ("was", 1), ("the", 1), ("puzzle’s", 2), ("creator,", 3),
+    assert terms == [("It", 1), ("was", 1), ("the", 1), ("puzzle’s", 2), ("creator", 3), ("—", 0),
                      ("an", 1), ("unassuming", 4), ("architecture", 4),
                      ("professor", 3), ("named", 1), ("Erno", 2), ("Rubik.", 2)]
 
