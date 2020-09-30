@@ -62,6 +62,7 @@ def test_terms_from_sentence_strip(ldelim, rdelim):
     ("1,235", 10),
     ("1952", 5),
     ("1920s", 4),
+    ("buyer/seller", 4),
     ("2-year-old", 3),
     ("self-aware", 3),
     ("16-10", 4),

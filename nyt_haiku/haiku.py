@@ -65,7 +65,7 @@ def syllables_for_term(term):
             s2 = syllables_for_term(r.group(2))
             return s1 + s2 + 1
 
-        r = re.match('([^-]+)-(.+)$', stripped_term)
+        r = re.match('([^-]+)[-/](.+)$', stripped_term)
         if r:
             s1 = syllables_for_term(r.group(1))
             s2 = syllables_for_term(r.group(2))
