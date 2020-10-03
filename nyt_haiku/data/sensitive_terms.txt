@@ -19,6 +19,7 @@ bomb
 bombing
 bombs
 coronavirus
+covid
 covid-19
 crime
 dead
