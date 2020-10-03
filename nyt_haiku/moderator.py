@@ -89,8 +89,11 @@ class ArticleModerator:
         if re.match(r'[^\(]+\)', text) or re.match(r'[^\[]+\]', text):
             return True
 
+        if re.search(r'\b(he|she) said', text):
+            return True
+
         # Bad ends
-        if re.fullmatch(r".+(([\-\);—:,])|(['’]s)|(he said.?)|(she said.?))$", text):
+        if re.search(r"(([\-\);—:,])|(['’]s)|(\b(and|or|but)))$", text):
             return True
 
         # Bad anywhere
