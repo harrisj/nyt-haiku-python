@@ -65,6 +65,7 @@ def test_is_awkward_text(mod, text):
     "There are 43 lights",
     "I won't do it",
     "Her name is Rio and she dances on the sand",
+    "Her vocal authority and pop fame.",
     "Self-aware this is the end",
     "Michaela Coel is such an [expletive] good writer",
     "This is by us",

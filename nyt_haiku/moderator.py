@@ -93,7 +93,7 @@ class ArticleModerator:
             return True
 
         # Bad ends
-        if re.search(r"(([\-\);—:,])|(['’]s)|(\b(and|or|but)))$", text):
+        if re.fullmatch(r".+(([\-\);—:,])|(['’]s)|(\b(and|or|but)))", text):
             return True
 
         # Bad anywhere
