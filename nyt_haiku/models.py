@@ -32,6 +32,7 @@ class Haiku(Model):
     retweet_count = fields.IntField(null=False, default=0)
     favorite_count = fields.IntField(null=False, default=0)
     created_at = fields.DatetimeField(null=True, auto_now_add=True)
+    quote_count = fields.IntField(null=False, default=0)
 
 
 async def init(path):
