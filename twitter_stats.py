@@ -15,10 +15,10 @@ logging.config.fileConfig('logconfig.ini')
 
 loop = asyncio.get_event_loop()
 
-twitter_client = PeonyClient(consumer_key=os.getenv("TWITTER_CONSUMER_KEY"),
-                             consumer_secret=os.getenv("TWITTER_CONSUMER_SECRET"),
-                             access_token=os.getenv("TWITTER_ACCESS_TOKEN"),
-                             access_token_secret=os.getenv("TWITTER_ACCESS_TOKEN_SECRET"),
+twitter_client = PeonyClient(consumer_key=os.getenv("TWITTER_CONSUMER_KEY_V2"),
+                             consumer_secret=os.getenv("TWITTER_CONSUMER_SECRET_V2"),
+                             access_token=os.getenv("TWITTER_ACCESS_TOKEN_V2"),
+                             access_token_secret=os.getenv("TWITTER_ACCESS_TOKEN_SECRET_V2"),
                              api_version="2",
                              suffix="")
 
