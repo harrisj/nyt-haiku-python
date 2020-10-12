@@ -1,0 +1,81 @@
+<!doctype html>
+<html class="no-js" lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>NYT Haiku</title>
+        <meta name="description" content="The 50 most popular haiku found by the Haiku bot">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+        <script src="https://kit.fontawesome.com/1ee128654b.js" crossorigin="anonymous"></script>
+        <!-- Place favicon.ico in the root directory -->
+
+        <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Arimo&family=Commissioner:wght@300&display=swap" rel="stylesheet">
+
+        <style type="text/css">
+         body {
+             padding-top: 60px;
+         }
+
+         div.haiku-row {
+             padding-bottom: 20px;
+         }
+
+         h3 {
+             font-family: 'Alfa Slab One', cursive;
+         }
+         
+         p.haiku {
+             font-family: 'Commissioner', sans-serif;
+             font-size: 150%;
+             line-height: 120%;
+             margin-bottom: 0.5rem;
+         }
+
+         p {
+             font-family: 'Arimo', sans-serif;
+         }
+        </style>
+    </head>
+    <body>
+        <!--[if lt IE 8]>
+            <p class="browserupgrade">
+            You are using an <strong>outdated</strong> browser. Please
+            <a href="http://browsehappy.com/">upgrade your browser</a> to improve
+            your experience.
+            </p>
+        <![endif]-->
+        <div class="container">
+            <div class="row">
+                <div class="col-4">
+                    <h1>NYT Haikus</h1>
+                    <p>These are the 50 most popular tweets from <a href="https://twitter.com/nythaikus">@nythaikus</a>, a Twitter bot that scans the <a href="https://nytimes.com/">New York Times</a> for haiku.</p>
+                    <ul>
+                        <li><a href="https://github.com/harrisj/nyt-haiku-python">Source Code</a></li>
+                        <li><a href="nythaiku.csv">Raw Data as a CSV</a></li>
+                    </ul>
+                </div>
+                <div class="col-8">
+                    {% for h in haikus %}
+                    <div class="row haiku-row">
+                        <blockquote class="blockquote mb-0">
+                            <p class="text-nowrap haiku">{{ h.line0 }}<br/>{{ h.line1 }}<br/>{{ h.line2 }}</p>
+                            <p class="haiku-footer">
+                                <small class="text-muted"><a href="{{ h.url }}"><cite title="{{ h.title }}">{{ h.title }}</cite></a><br>
+                                        <a href="https://twitter.com/nythaikus/status/{{ h.tweet_id }}"><i class="far fa-heart"></i> {{ h.favorite_count }}  <i class="fas fa-retweet"></i> {{ h.retweet_count }}  <i class="far fa-comment"></i> {{ h.quote_count }}</a>
+                                    </small>
+                                </p>
+                            </blockquote>
+                        </div>
+                        {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    </body>
+</html>

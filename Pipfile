@@ -27,6 +27,7 @@ aiosqlite = "*"
 tortoise-orm = "*"
 num2words = "*"
 unidecode = "*"
+jinja2 = "*"
 
 [requires]
 python_version = "3.8"
