@@ -31,9 +31,9 @@ def test_terms_from_sentence():
 
 
 def test_load_syllables_override():
-    sentence = "an inspired foil"
+    sentence = "he debates all"
     terms = haiku.terms_from_sentence(sentence)
-    assert terms == [("an", 1), ("inspired", 3), ("foil", 2)]
+    assert terms == [("he", 1), ("debates", 2), ("all", 1)]
 
 
 @pytest.mark.parametrize("ldelim, rdelim", [
@@ -58,6 +58,8 @@ def test_terms_from_sentence_strip(ldelim, rdelim):
 
 @pytest.mark.parametrize("term,expected", [
     ("apple", 2),
+    ("scene's", 1),
+    ("France's", 2),
     ("57", 4),
     ("1,235", 10),
     ("1952", 5),

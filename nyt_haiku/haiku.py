@@ -44,12 +44,24 @@ def is_special_punctuation(term):
     return term in SPECIAL_PUNCTUATION_BREAKS;
 
 
+def has_syllable_exception(term):
+    return term in syllapy.WORD_DICT
+
+
 def syllables_for_term(term):
     if is_special_punctuation(term):
         return 0
 
     stripped_term = clean_term(term)
     try:
+        if has_syllable_exception(stripped_term):
+            return syllapy.count(stripped_term)
+
+        r = re.match("(.+)'s$", stripped_term)
+        if r:
+            # Most possessive's don't add syllables
+            return syllapy.count(r.group(1))
+
         r = re.match('([0-9]{4})s?$', stripped_term)
         if r:
             terms = num2words(r.group(1), to='year').split()
