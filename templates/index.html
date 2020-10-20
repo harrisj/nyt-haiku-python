@@ -48,15 +48,17 @@
         <![endif]-->
         <div class="container">
             <div class="row">
-                <div class="col-4">
-                    <h1>NYT Haikus</h1>
-                    <p>These are the 50 most popular tweets from <a href="https://twitter.com/nythaikus">@nythaikus</a>, a Twitter bot that scans the <a href="https://nytimes.com/">New York Times</a> for haiku.</p>
-                    <ul>
-                        <li><a href="https://github.com/harrisj/nyt-haiku-python">Source Code</a></li>
-                        <li><a href="nythaiku.csv">Raw Data as a CSV</a></li>
-                    </ul>
+                <div class="col-md-4">
+                    <div class="row">
+                        <h1>NYT Haikus</h1>
+                        <p>These are the 50 most popular tweets from <a href="https://twitter.com/nythaikus">@nythaikus</a>, a Twitter bot that scans the <a href="https://nytimes.com/">New York Times</a> for haiku.</p>
+                        <ul>
+                            <li><a href="https://github.com/harrisj/nyt-haiku-python">Source Code</a></li>
+                            <li><a href="nythaiku.csv">Raw Data as a CSV</a></li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="col-8">
+                <div class="col-md-8">
                     {% for h in haikus %}
                     <div class="row haiku-row">
                         <blockquote class="blockquote mb-0">
