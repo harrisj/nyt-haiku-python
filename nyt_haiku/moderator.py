@@ -28,7 +28,7 @@ class ArticleModerator:
             self.awkward_abbreviations = set(line for line in (l.strip() for l in fp) if line)
 
         awkward_regex_string = '|'.join([f"({t})" for t in self.awkward_abbreviations]).replace(".", "\\.")
-        self.awkward_abbreviation_regex = re.compile(f"\b{awkward_regex_string}")
+        self.awkward_abbreviation_regex = re.compile(awkward_regex_string)
 
     def init_sensitive_sections(self):
         with open(os.path.join(os.path.dirname(__file__), 'data', 'sensitive_sections.txt')) as fp:
@@ -45,6 +45,9 @@ class ArticleModerator:
 
     def is_awkward(self, text):
         if self.awkward_abbreviation_regex.search(text):
+            return True
+
+        if not re.search(r'[.?!;]([‘“"\)])?$', text):
             return True
 
         # Multi-character abbreviations
