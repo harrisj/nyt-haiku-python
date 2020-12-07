@@ -47,8 +47,8 @@ class ArticleModerator:
         if self.awkward_abbreviation_regex.search(text):
             return True
 
-        if not re.search(r'[.?!;]([‘“"\)])?$', text):
-            return True
+        # if not re.search(r'[.?!;]([‘“"\)])?$', text):
+        #     return True
 
         # Multi-character abbreviations
         if re.search('[A-Z]\\.[A-Z]\\.', text):
