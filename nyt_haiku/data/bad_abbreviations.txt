@@ -1,6 +1,7 @@
 Apr.
 Aug.
 Calif.
+Cpl.
 Dec.
 Dr.
 Feb.
@@ -16,6 +17,7 @@ Ms.
 Mx.
 Nov.
 Oct.
+Pfc.
 Sep.
 Sept.
 Tex.
