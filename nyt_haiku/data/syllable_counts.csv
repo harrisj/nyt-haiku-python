@@ -3,6 +3,7 @@
 20th,3
 21st,3
 a.m,2
+abc,3
 abeyance,3
 abridged,2
 absentee,3
@@ -43,6 +44,7 @@ aerial,3
 affirmed,2
 affixed,2
 affluent,3
+aficionado,6
 aforementioned,4
 aged,1
 aggressively,3
@@ -69,12 +71,14 @@ altered,2
 alternatives,4
 amassed,2
 amazed,2
+amazonian,5
 ambient,3
 ambiguity,5
 ambushed,2
 amelia,4
 ammonia,4
 amped,1
+amused,2
 amusement,3
 analyzed,3
 anarchism,4
@@ -86,6 +90,7 @@ annie,2
 announcements,3
 annoyance,3
 annoying,3
+annually,4
 answered,2
 antiques,2
 anxieties,4
@@ -237,6 +242,8 @@ brasserie,3
 breathes,1
 brene,2
 bribed,1
+bridesmaid,2
+bridesmaids,2
 broached,1
 broadsides,2
 bronzed,1
@@ -283,6 +290,7 @@ caravaggio,5
 caravaggios,5
 cardiologist,5
 cardplayers,3
+cared,1
 carefully,3
 caregiving,3
 careless,2
@@ -310,6 +318,7 @@ cautioned,2
 caveat,3
 caveats,3
 caved,1
+cbs,3
 ceaseless,2
 celebrates,3
 celled,1
@@ -395,6 +404,7 @@ comeback,2
 comedian,4
 comedians,4
 comely,2
+commedia,4
 commencement,3
 commissioned,3
 communicates,4
@@ -483,6 +493,8 @@ cynthia,3
 d'escalier,4
 d'origine,4
 damaged,2
+damaged,2
+dames,1
 damned,1
 danes,1
 dario,3
@@ -591,6 +603,7 @@ doesn't,2
 dolio,3
 dominates,3
 donahue,3
+donned,1
 doomed,1
 doored,1
 dragged,1
@@ -623,6 +636,7 @@ easeful,2
 eclipsed,2
 ecological,5
 edifying,4
+edwardian,4
 effectively,4
 eighty,3
 elapsed,2
@@ -820,6 +834,7 @@ fumes,1
 functioned,2
 funereal,4
 furious,3
+furloughed,2
 furred,1
 furriest,3
 furthered,2
@@ -908,12 +923,14 @@ hallowed,2
 halves,1
 hammered,2
 happier,3
+harassed,2
 harder,2
 harriet,3
 harris's,3
 hasn't,2
 hates,1
 having,2
+hbo,3
 headlines,2
 healthier,3
 heartiest,3
@@ -959,6 +976,7 @@ hours,2
 housed,1
 households,2
 hugely,2
+hugged,1
 hughes,1
 humiliations,5
 hurled,1
@@ -971,9 +989,11 @@ iceberg,2
 icebergs,2
 iced,1
 ideal,2
+idiosyncratic,6
 idiosyncratic,7
 ignored,2
 illustrious,4
+imagined,3
 imagined,3
 immanuel,4
 immensely,3
@@ -983,6 +1003,7 @@ impetuous,4
 impingement,3
 imposed,2
 impressed,2
+improvised,3
 imputes,2
 incensed,2
 incentives,3
@@ -1091,6 +1112,7 @@ lifeline,2
 lifelines,2
 lifelong,2
 lifetimes,2
+lightened,2
 likened,2
 likes,1
 lineage,3
@@ -1310,6 +1332,7 @@ overpriced,3
 overstressed,3
 overtimes,3
 overturned,3
+overwhelmed,3
 p.m,2
 packed,1
 paged,1
@@ -1346,6 +1369,8 @@ perched,1
 performed,2
 periods,3
 perpetual,4
+perpetuate,4
+perpetuates,4
 perspectives,3
 pessimism,4
 pewdiepie,3
@@ -1386,6 +1411,7 @@ polyester,4
 pondered,2
 pooled,1
 popes,1
+popped,1
 popularized,4
 pored,1
 pores,1
@@ -1600,9 +1626,11 @@ scoffed,1
 scored,1
 scratched,1
 scrawled,1
+screened,1
 screwed,1
 scrolled,1
 scrubbed,1
+searched,1
 seasoned,2
 sectarian,4
 secured,2
@@ -1630,6 +1658,7 @@ sharpened,2
 sharply,2
 shattered,2
 shellshocked,2
+sheltered,2
 shiitake,3
 shimmying,3
 shined,1
@@ -1771,6 +1800,7 @@ surrounded,3
 survived,2
 sustained,2
 swelled,1
+swiped,1
 tabbed,1
 tacked,1
 tagged,1
@@ -1788,6 +1818,7 @@ tastemakers,3
 taxed,1
 taxpayers,3
 teammates,2
+teared,1
 techniques,2
 temperatures,4
 tempered,2
@@ -1888,7 +1919,10 @@ unroped,2
 unsubsidized,4
 untucked,2
 unveiled,2
+unwrapped,2
 updates,2
+uproarious,4
+uproariously,5
 urged,1
 ushered,2
 using,2
@@ -1903,6 +1937,8 @@ variously,4
 varying,3
 ventured,2
 vertebrates,3
+victorian,4
+victorians,4
 video's,3
 videos,3
 vienna,3
@@ -1950,12 +1986,14 @@ wheeled,1
 whites,1
 wildfire,3
 willingness,3
+wiped,1
 wished,1
 witnessed,2
 wondered,2
 worrying,3
 worsened,2
 wouldn't,2
+wrapped,1
 wrecked,1
 wrongdoing,3
 yosemite,4
