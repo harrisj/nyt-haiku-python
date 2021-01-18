@@ -12,7 +12,6 @@ from functools import reduce
 
 from nyt_haiku.moderator import ArticleModerator
 from nyt_haiku.models import Article, Haiku
-from nyt_haiku.haiku import find_haikus_in_article
 
 ARTICLE_MODERATOR = ArticleModerator()
 
@@ -184,8 +183,8 @@ def parse_article(logger, url: str, body_html:str, parse_sensitive:bool=False):
     return meta, body
 
 
-async def save_haikus(logger, article_id, url: str, body: str):
-    haikus = find_haikus_in_article(body)
+async def save_haikus(logger, haiku_finder, article_id, url: str, body: str):
+    haikus = haiku_finder.find_haikus_in_article(body)
     haiku_count = 0
 
     for haiku in haikus:
@@ -211,7 +210,7 @@ async def save_haikus(logger, article_id, url: str, body: str):
     return haiku_count
 
 
-async def article_callback(session, logger, article: Article):
+async def article_callback(session, logger, haiku_finder, article: Article):
     article.sensitive = False
     text = None
     async with session.get(article.url) as response:
@@ -222,7 +221,7 @@ async def article_callback(session, logger, article: Article):
     if meta['sensitive']:
         logger.info(f"SKIP    {article.url} SENSITIVE")
     else:
-        haiku_count = await save_haikus(logger, article.id, article.url, body)
+        haiku_count = await save_haikus(logger, haiku_finder, article.id, article.url, body)
         logger.info(f"FOUND {haiku_count} {article.url}")
 
     article.parsed = True
@@ -239,8 +238,8 @@ async def article_callback(session, logger, article: Article):
     await article.save()
 
 
-async def fetch_articles(session, logger):
+async def fetch_articles(session, logger, haiku_finder):
     logger.info("ARTICLES start...")
     unfetched_articles = await Article.filter(parsed=False).all()
-    await asyncio.gather(*[asyncio.create_task(article_callback(session, logger, article)) for article in unfetched_articles], return_exceptions=True)
+    await asyncio.gather(*[asyncio.create_task(article_callback(session, logger, haiku_finder, article)) for article in unfetched_articles], return_exceptions=True)
     logger.info("ARTICLES done")

@@ -2,6 +2,7 @@ import sys
 import requests
 from nyt_haiku import nyt, haiku
 from nyt_haiku.moderator import ArticleModerator
+from nyt_haiku.haiku import HaikuFinder, clean_term
 from string import punctuation
 import logging
 words = {}
@@ -18,6 +19,7 @@ def fetch_article(url):
 if __name__ == "__main__":
     url = sys.argv[1]
     body = fetch_article(url)
+    haiku = HaikuFinder()
     sentences = haiku.sentences_from_article(body)
     moderator = ArticleModerator()
 
@@ -26,7 +28,7 @@ if __name__ == "__main__":
 
         terms = haiku.terms_from_sentence(sent)
         for (term, count) in terms:
-            term = haiku.clean_term(term)
+            term = clean_term(term)
             words[term] = count
 
     haikus = haiku.find_haikus_in_article(body)

@@ -6,7 +6,8 @@ import aiohttp
 import logging
 import logging.config
 from dotenv import load_dotenv
-from nyt_haiku import models, nyt, twitter
+from nyt_haiku import models, nyt, twitter, haiku
+from nyt_haiku.haiku import HaikuFinder
 
 load_dotenv()
 
@@ -16,12 +17,13 @@ logging.config.fileConfig('logconfig.ini')
 async def main():
     logger.info("Starting run...")
     db_path = os.getenv("DB_PATH")
+    haiku_finder = HaikuFinder()
     await models.init(db_path)
 
     connector = aiohttp.TCPConnector(limit_per_host=15)
     async with aiohttp.ClientSession(connector=connector) as session:
         await nyt.check_sections(session, logger)
-        await nyt.fetch_articles(session, logger)
+        await nyt.fetch_articles(session, logger, haiku_finder)
         if os.getenv("DISABLE_TWITTER") != 'true':
             await twitter.tweet(session, logger)
             
