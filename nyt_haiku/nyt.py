@@ -64,6 +64,7 @@ async def section_callback(session, logger, section_url: str):
 
     async with session.get(section_url) as response:
         soup = BeautifulSoup(await response.text(), 'html.parser')
+
     article_urls = [a.get('href') or '' for a in soup.find_all('a')]
 
     # if not http://, prepend domain name
@@ -74,7 +75,9 @@ async def section_callback(session, logger, section_url: str):
     for url in article_urls:
         try:
             exists = await Article.get_or_create(url=url)
+            logger.debug(f"EXISTS {url}")
             if not exists:
+                logger.debug(f"CREATE ARTICLE {url}")
                 await Article.create(url=url)
         except (tortoise.exceptions.IntegrityError, sqlite3.IntegrityError):
             pass

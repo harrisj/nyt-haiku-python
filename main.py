@@ -6,13 +6,14 @@ import aiohttp
 import logging
 import logging.config
 from dotenv import load_dotenv
-from nyt_haiku import models, nyt, twitter, haiku
+from nyt_haiku import models, nyt, twitter
 from nyt_haiku.haiku import HaikuFinder
 
 load_dotenv()
 
 logger = logging.getLogger()
 logging.config.fileConfig('logconfig.ini')
+
 
 async def main():
     logger.info("Starting run...")
@@ -26,7 +27,7 @@ async def main():
         await nyt.fetch_articles(session, logger, haiku_finder)
         if os.getenv("DISABLE_TWITTER") != 'true':
             await twitter.tweet(session, logger)
-            
+
     await models.close_db()
     logger.info("Ending run...")
 
