@@ -28,6 +28,3 @@ tortoise-orm = "== 0.16.21"
 num2words = "*"
 unidecode = "*"
 jinja2 = "*"
-
-[requires]
-python_version = "3.8"
