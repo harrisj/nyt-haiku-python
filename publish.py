@@ -36,7 +36,7 @@ async def publish_html():
 
     html_path = os.getenv('HTML_OUTPUT_PATH')
     conn = Tortoise.get_connection("default")
-    haikus = await conn.execute_query_dict("select h.tweet_id, h.line0, h.line1, h.line2, h.favorite_count, h.retweet_count, h.quote_count, a.url, a.title from haiku h join article a on a.id = h.article_id where h.tweet_id is NOT NULL order by favorite_count + retweet_count + quote_count DESC limit 50")
+    haikus = await conn.execute_query_dict("select h.tweet_id, h.line0, h.line1, h.line2, h.favorite_count, h.retweet_count, h.quote_count, a.url, a.title from haiku h join article a on a.id = h.article_id where h.tweet_id is NOT NULL AND favorite_count + retweet_count + quote_count > 0 order by favorite_count + retweet_count + quote_count DESC limit 50")
 
     env = Environment(loader=FileSystemLoader('templates'))
     template = env.get_template('index.html')
