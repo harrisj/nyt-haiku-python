@@ -10,8 +10,9 @@ words = {}
 logger = logging.getLogger(__name__)
 
 def fetch_article(url):
-    r = requests.get(url)
-    assert r.status_code == 200
+    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
+    r = requests.get(url, headers=headers)
+    assert r.status_code == 200, f"Received {r.status_code} for {url}"
 
     meta, body = nyt.parse_article(logger, url, r.text, True)
     return body
