@@ -216,7 +216,9 @@ async def save_haikus(logger, haiku_finder, article_id, url: str, body: str):
 async def article_callback(session, logger, haiku_finder, article: Article):
     article.sensitive = False
     text = None
-    async with session.get(article.url) as response:
+    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
+
+    async with session.get(article.url, headers=headers) as response:
         text = await response.text()
 
     meta, body = parse_article(logger, article.url, text)
